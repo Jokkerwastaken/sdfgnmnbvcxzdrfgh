@@ -28,9 +28,10 @@ public class Point2 implements Drawable {
         return new Vector2(other.x - this.x, other.y - this.y);
     }
 
-    public void draw(Graphics g, int offsetX, int offsetY) {
+    @Override
+    public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null) return;
         g.setColor(this.Color);
-        g.drawOval((int)(offsetX + this.x) - Radius, (int)(offsetY - this.y) - Radius, Radius*2, Radius*2);
+        g.fillOval((int)((offsetX + this.x) - (Radius*scale)), (int)((offsetY - this.y) - (Radius*scale)), (int)(Radius*2*scale), (int)(Radius*2*scale));
     }
 }
