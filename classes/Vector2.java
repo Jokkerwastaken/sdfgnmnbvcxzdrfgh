@@ -6,6 +6,7 @@ import java.awt.Graphics;
 
 public class Vector2 implements Drawable {
     public double x, y;
+    public float Scale;
     public Color Color;
 
     public Vector2(double x, double y) {
@@ -19,7 +20,7 @@ public class Vector2 implements Drawable {
         this.Color = color;
     }
 
-    private double magnitude() {
+    public double magnitude() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
@@ -74,10 +75,11 @@ public class Vector2 implements Drawable {
 
 
     @Override
-    public void draw(Graphics g, int offsetX, int offsetY) {
+    public void draw(Graphics g, int offsetX, int offsetY, float scale) {
+        if (this.Scale == 0 && scale > 1e-9) this.Scale = scale;
         if (this.Color == null) return;
         g.setColor(this.Color);
         // Draws a line from the offset (origin) to the vector position
-        g.drawLine(offsetX, offsetY, (int)(offsetX + this.x), (int)(offsetY - this.y));
+        g.drawLine(offsetX, offsetY, (int)(offsetX + (this.x * scale)), (int)(offsetY - (this.y*scale)));
     }
 }

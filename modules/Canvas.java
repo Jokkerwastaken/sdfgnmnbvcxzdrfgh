@@ -11,12 +11,13 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     //Canvas stuff
     public int width, height;
+    private final float Scale = 2;
 
     // FPS
     public float F_deltaTime;
     public float F_samples = 0;
     public final int[] lastFewFPS = new int[100];
-    private int count = 0;
+    private int Count = 0;
     private int maxFPS;
     private int minFPS;
     private int averageFPS;
@@ -60,7 +61,7 @@ public class Canvas extends JPanel {
 
         this.averageFPS = (int) (sum / lastFewFPS.length);
     
-        if (FPSLimit > 0 && averageFPS > FPSLimit) return;
+        if (FPSLimit == 0) return;
     
         long currentTime = System.nanoTime();
     
@@ -88,12 +89,12 @@ public class Canvas extends JPanel {
         super.paintComponent(g);
 
         for (Drawable obj : this.drawable) {
-            obj.draw(g, this.width/2, this.height/2);
+            obj.draw(g, this.width/2, this.height/2, Scale);
         }
 
         if (F_deltaTime == 0) return;
-        lastFewFPS[count % lastFewFPS.length] = (int)(1.0 / F_deltaTime);
-        count = (count + 1) % lastFewFPS.length;
+        lastFewFPS[Count % lastFewFPS.length] = (int)(1.0 / F_deltaTime);
+        Count = (Count + 1) % lastFewFPS.length;
 
         if (F_deltaTime > 0) {
             g.setColor(Color.BLACK);

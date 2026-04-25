@@ -3,12 +3,12 @@ package loops;
 import modules.GFrame;
 
 public class RepaintLoop implements Runnable {
-    private GFrame frame;
+    private final GFrame Frame;
     private float FPSLimit = 0.0f;
     private boolean isFPSLimited;
 
     public RepaintLoop(GFrame frame, float FPSLimit) {
-        this.frame = frame;
+        this.Frame = frame;
 
         if (FPSLimit > 0) {
             this.FPSLimit = FPSLimit;
@@ -29,10 +29,10 @@ public class RepaintLoop implements Runnable {
             deltaTime = (currentTime - repLastTime) / 1_000_000_000.0f;
             repLastTime = currentTime;
 
-            frame.canvas.F_deltaTime = deltaTime;
-            if (frame.canvas.F_samples < frame.canvas.lastFewFPS.length) frame.canvas.F_samples++; 
+            Frame.canvas.F_deltaTime = deltaTime;
+            if (Frame.canvas.F_samples < Frame.canvas.lastFewFPS.length) Frame.canvas.F_samples++; 
             
-            frame.canvas.repaint();
+            Frame.canvas.repaint();
             
             if (!isFPSLimited) return;
 
