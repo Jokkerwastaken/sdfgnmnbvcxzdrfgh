@@ -63,13 +63,13 @@ public class Vector2 implements Drawable {
     }
 
     public void multiply(Vector2 other, float deltaTime) {
-        this.x = this.y * (other.x * deltaTime);
+        this.x = this.x * (other.x * deltaTime);
         this.y = this.y * (other.y * deltaTime);
     }
 
     public void divide(Vector2 other, float deltaTime) {
         if (other.x == 0 || other.y == 0 || deltaTime == 0) throw new ArithmeticException("Division by zero");
-        this.x = this.y / (other.x * deltaTime);
+        this.x = this.x / (other.x * deltaTime);
         this.y = this.y / (other.y * deltaTime);
     }
 
