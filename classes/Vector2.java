@@ -10,12 +10,12 @@ public class Vector2 implements Drawable {
 
     public Vector2(double x, double y) {
         this.x = x;
-        this.y = y * -1;
+        this.y = y;
     }
 
     public Vector2(double x, double y, Color color) {
         this.x = x;
-        this.y = y * -1;
+        this.y = y;
         this.Color = color;
     }
 
@@ -46,6 +46,7 @@ public class Vector2 implements Drawable {
     }
 
     public Vector2 divide(Vector2 other) {
+        if (other.x == 0 || other.y == 0) throw new ArithmeticException("Division by zero");
         return new Vector2(this.x / other.x, this.y / other.y);
     }
 
@@ -66,6 +67,7 @@ public class Vector2 implements Drawable {
     }
 
     public void divide(Vector2 other, float deltaTime) {
+        if (other.x == 0 || other.y == 0 || deltaTime == 0) throw new ArithmeticException("Division by zero");
         this.x = this.y / (other.x * deltaTime);
         this.y = this.y / (other.y * deltaTime);
     }
@@ -76,6 +78,6 @@ public class Vector2 implements Drawable {
         if (this.Color == null) return;
         g.setColor(this.Color);
         // Draws a line from the offset (origin) to the vector position
-        g.drawLine(offsetX, offsetY, (int)(this.x + offsetX), (int)(this.y + offsetY));
+        g.drawLine(offsetX, offsetY, (int)(offsetX + this.x), (int)(offsetY - this.y));
     }
 }

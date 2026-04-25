@@ -1,6 +1,8 @@
 import classes.*;
 import java.awt.Color;
 import javax.swing.Timer;
+import loops.GameLoop;
+import loops.RepaintLoop;
 import modules.GFrame;
 import objects.Entity;
 
@@ -17,8 +19,7 @@ public class Driver implements Runnable {
     private final Vector2 vector3 = new Vector2(0, 0, Color.GREEN);
 
     //fps
-    public double currentFPS;
-    private float FPSLimit = 144;
+    private final float FPSLimit = 144;
     
     @Override
     public void run() {
@@ -38,52 +39,17 @@ public class Driver implements Runnable {
 
         frame.canvas.FPSLimit = FPSLimit;
 
-        Thread refThread = new Thread() {
-            @Override
+
+        Thread repaintThread = new Thread() {
             public void run() {
-                long LastTime = System.nanoTime();
-                long currentTime;
-                float deltaTime;
-                while (true) {
-                    currentTime = System.nanoTime();
-                    deltaTime = (currentTime - LastTime) / 1_000_000_000.0f;
-                    LastTime = currentTime;
-
-                    frame.canvas.moveMovable(deltaTime);
-                    //System.out.println("Hello!");
-
-                    try {
-                        Thread.sleep(1000/30);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                RepaintLoop repaintLoop = new RepaintLoop(frame, FPSLimit);
+                repaintLoop.run();
             }
         };
-
-        Thread repThread = new Thread() {
-            @Override
+        Thread phyThread = new Thread() {
             public void run() {
-                long LastTime = System.nanoTime();
-                long currentTime;
-                float deltaTime;
-
-                while (true) {
-                    currentTime = System.nanoTime();
-                    deltaTime = (currentTime - LastTime) / 1_000_000_000.0f;
-                    LastTime = currentTime;
-
-                    frame.canvas.F_deltaTime = deltaTime;
-                    if (frame.canvas.F_samples < frame.canvas.lastFewFPS.length) frame.canvas.F_samples++; 
-                    
-                    frame.canvas.repaint();
-                    
-                    try {
-                        Thread.sleep(1000/144);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }   
+                GameLoop gameLoop = new GameLoop(frame);
+                gameLoop.run();
             }
         };
 
@@ -91,8 +57,8 @@ public class Driver implements Runnable {
             frame.canvas.fpsManager();
         });
 
-        repThread.start();
-        refThread.start();
+        repaintThread.start();
+        phyThread.start();
         
         fpsTimer.start();
 

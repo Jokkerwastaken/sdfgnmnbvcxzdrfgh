@@ -34,7 +34,7 @@ public class Entity implements Drawable, Movable {
         Position.draw(g, offsetX, offsetY);
         if (debug) {
             for (Vector2 elem : AppliedVectors) {
-                elem.draw(g, offsetX + (int)this.Position.x, offsetY + (int)this.Position.y);
+                elem.draw(g, offsetX + (int)this.Position.x, offsetY - (int)this.Position.y);
             }
         }
     }

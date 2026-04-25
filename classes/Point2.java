@@ -31,6 +31,6 @@ public class Point2 implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY) {
         if (this.Color == null) return;
         g.setColor(this.Color);
-        g.drawOval((int)(this.x + offsetX) - Radius, (int)(this.y + offsetY) - Radius, Radius*2, Radius*2);
+        g.drawOval((int)(offsetX + this.x) - Radius, (int)(offsetY - this.y) - Radius, Radius*2, Radius*2);
     }
 }

@@ -100,7 +100,7 @@ public class Canvas extends JPanel {
             
             g.drawString("Max FPS: " + this.maxFPS, 30, 30);
             g.drawString("Avg FPS: " + this.averageFPS, 30, 50);
-            g.drawString("Min FPS: " + this.minFPS, 30, 70);
+            g.drawString("Min FPS: " + (this.minFPS == Integer.MAX_VALUE ? 0 : this.minFPS), 30, 70);
         }
     }
 }
