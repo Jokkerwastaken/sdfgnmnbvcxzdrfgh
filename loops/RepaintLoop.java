@@ -5,7 +5,7 @@ import modules.GFrame;
 public class RepaintLoop implements Runnable {
     private final GFrame Frame;
     private float FPSLimit = 0.0f;
-    private boolean isFPSLimited;
+    private final boolean isFPSLimited;
 
     public RepaintLoop(GFrame frame, float FPSLimit) {
         this.Frame = frame;
@@ -29,17 +29,17 @@ public class RepaintLoop implements Runnable {
             deltaTime = (currentTime - repLastTime) / 1_000_000_000.0f;
             repLastTime = currentTime;
 
-            Frame.canvas.F_deltaTime = deltaTime;
-            if (Frame.canvas.F_samples < Frame.canvas.lastFewFPS.length) Frame.canvas.F_samples++; 
+            Frame.canvas.fpsManager.F_deltaTime = deltaTime;
+            if (Frame.canvas.fpsManager.F_samples < Frame.canvas.fpsManager.LastFewFPS.length) Frame.canvas.fpsManager.F_samples++; 
             
             Frame.canvas.repaint();
             
-            if (!isFPSLimited) return;
-
-            try {
-                Thread.sleep((int)(1000/FPSLimit));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (isFPSLimited) {
+                try {
+                    Thread.sleep((int)(1000/FPSLimit));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }   
     }

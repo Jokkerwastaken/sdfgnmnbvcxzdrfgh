@@ -2,10 +2,10 @@ package loops;
 
 import modules.GFrame;
 
-public class GameLoop implements Runnable {
+public class PhysicsLoop implements Runnable {
     private GFrame frame;
 
-    public GameLoop(GFrame frame) {
+    public PhysicsLoop(GFrame frame) {
         this.frame = frame;
     }
 
@@ -19,11 +19,12 @@ public class GameLoop implements Runnable {
             deltaTime = (currentTime - refLastTime) / 1_000_000_000.0f;
             refLastTime = currentTime;
 
+            frame.canvas.P_deltaTime = deltaTime;
+
             frame.canvas.moveMovable(deltaTime);
-            //System.out.println("Hello!");
 
             try {
-                Thread.sleep(1000/30);
+                Thread.sleep(1000/60);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
