@@ -30,11 +30,11 @@ public class Prop implements Drawable, Movable, Collidable {
     public Prop(Point2 Position, float Radius, Vector2 Velocity, Color Color) {
         this.Position = Position;
         this.Velocity = Velocity;
-        this.Gravity = new Vector2(0, -15, 1, Color.PINK);
+        this.Gravity = new Vector2(0, -15, Color.PINK);
 
         this.Angle = 0; // In radians
         this.AngularVelocity = 0;
-        this.Heading = new Vector2(10, 0, 1, Color.YELLOW);
+        this.Heading = new Vector2(10, 0, Color.YELLOW);
 
         this.AppliedVectors = new ArrayList<>();
         this.AppliedVectors.add(this.Velocity); // Moving Vector

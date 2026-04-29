@@ -14,6 +14,7 @@ public class PhysicsLoop implements Runnable {
         long refLastTime = System.nanoTime();
         long currentTime;
         float deltaTime;
+        
         while (true) {
             currentTime = System.nanoTime();
             deltaTime = (currentTime - refLastTime) / 1_000_000_000.0f;

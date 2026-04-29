@@ -2,91 +2,77 @@ package objects;
 
 import classes.Point2;
 import classes.Vector2;
+import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
 import modules.GFrame;
+import objects.modules.Moving;
+import loops.InputHandler;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 
-public class Entity implements Drawable, Movable {
+public class Entity implements Drawable, Movable, Controllable {
     public Point2 Position;
-    private Vector2 Velocity, Gravity;
 
-    private Vector2 Heading;
-    private double Angle, AngularVelocity; 
+    private final Moving moveHandler;
+    private InputHandler inputHandler;
 
-    private ArrayList<Vector2> AppliedVectors;
-    private double AirTraction;
-    private float maxSpeed = 50;
+    private boolean debug;
+    private float ScaleToFrame;
 
-    private boolean debug = true;
-    private float Scale;
-
-    public Entity(Point2 position, Vector2 velocity, Color color, GFrame frame) {
+    public Entity(Point2 position, Vector2 velocity, Color color, boolean gravityApplied, GFrame frame) {
         this.Position = position;
-        this.Velocity = velocity;
+        this.moveHandler = new Moving(this, velocity, gravityApplied);
 
-        this.Angle = 0; // In radians
-        this.AngularVelocity = 0;
-
-        this.AppliedVectors = new ArrayList<>();
-        this.AppliedVectors.add(this.Velocity);                                 // Moving Vector
-        this.AppliedVectors.add(new Vector2(0, -15, this.Scale, Color.PINK));   // Gravity Vector
-        this.AppliedVectors.add(new Vector2(10, 0, this.Scale, Color.YELLOW));  // Heading vector
-
-        this.AirTraction = 0.1;
         this.Position.Color = color;
-        this.Scale = 1;
         
         // Adds itself to canvas's lists just because
         if (frame == null) return;
         frame.canvas.addMovable(this);
         frame.canvas.addDrawable(this);
+
+        this.debug = frame.canvas.debug;
     }
+
+
+    public void makeControllable(GFrame frame) {
+        frame.canvas.addControllable(this);
+    }
+
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        Position.draw(g, offsetX, offsetY, scale);
+        if (this.ScaleToFrame != scale) this.ScaleToFrame = scale;
+
+        Position.draw(g, offsetX, offsetY, ScaleToFrame);
+
         if (debug) {
-            for (Vector2 elem : AppliedVectors) {
-                elem.draw(g, offsetX + (int)this.Position.x,
-                             offsetY - (int)this.Position.y, scale);
+            for (Vector2 elem : moveHandler.AppliedVectors) {
+                elem.draw(g, offsetX + (int)(this.Position.x*scale),
+                             offsetY - (int)(this.Position.y*scale), this.ScaleToFrame);
             }
         }
     }
 
-    private void friction(float deltaTime) {
-        if (Velocity.x == 0 && Velocity.y == 0) return;
-
-        double frictionFactor = 1.0 / (1.0 + (deltaTime * AirTraction));
-
-        this.Velocity.x *= frictionFactor;
-        this.Velocity.y *= frictionFactor;
-
-        if (Math.abs(Velocity.x) < 0.001) Velocity.x = 0;
-        if (Math.abs(Velocity.y) < 0.001) Velocity.y = 0;
+    
+    @Override
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
 
-    // Checking the hypotenuse of the Velocity
-    private void speedCheck() {
-        double Hypotenuse = Velocity.magnitude();
-        if (Hypotenuse < (maxSpeed)) return;
 
-        Velocity.x = (Velocity.x / Hypotenuse) * maxSpeed;
-        Velocity.y = (Velocity.y / Hypotenuse) * maxSpeed;
+    private void input() {
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_D)) this.moveHandler.Velocity.x += 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_A)) this.moveHandler.Velocity.x -= 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_W)) this.moveHandler.Velocity.y += 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_S)) this.moveHandler.Velocity.y -= 1;
     }
 
     @Override
     public void move(float deltaTime) {
-        this.Velocity.add(this.Gravity, deltaTime);
-
-        friction(deltaTime);
-        speedCheck();
-
-        this.Angle += this.AngularVelocity * deltaTime;
-        this.Position.x += (this.Velocity.x * deltaTime) * this.Scale;
-        this.Position.y += (this.Velocity.y * deltaTime) * this.Scale; 
+        if (this.inputHandler != null)input();
+        moveHandler.move(deltaTime);
     }
 }

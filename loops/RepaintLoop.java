@@ -33,6 +33,9 @@ public class RepaintLoop implements Runnable {
             if (Frame.canvas.fpsManager.F_samples < Frame.canvas.fpsManager.LastFewFPS.length) Frame.canvas.fpsManager.F_samples++; 
             
             Frame.canvas.repaint();
+            // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out
+            // Frame.canvas.OffsetY -= 1;       // Example use of screen offset which in this case is redused 
+                                                // and as a result the picture moves downward
             
             if (isFPSLimited) {
                 try {

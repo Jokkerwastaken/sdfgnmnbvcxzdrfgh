@@ -1,9 +1,13 @@
 package modules;
 
+import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
+import loops.InputHandler;
+import modules.inputs.*;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -11,23 +15,47 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     //Canvas stuff
     public int width, height;
-    public final float Scale = 0.2f;
+    public float Scale = 2f;
+    public int OffsetX, OffsetY;
+    public final boolean debug = false;
+
+    // Input handler;
+    private final InputHandler inputHandler;
 
     // FPS
     public final FPSManager fpsManager;
     public float P_deltaTime;
 
     // Lists
+    public final List<Controllable> controllable = new CopyOnWriteArrayList<>();
     private final List<Movable> movable = new CopyOnWriteArrayList<>();
     private final List<Drawable> drawable = new CopyOnWriteArrayList<>();
 
     public Canvas (int width, int height) {
         this.width = width;
         this.height = height;
+
+        this.OffsetX = width/2;
+        this.OffsetY = height/2;
+
         this.fpsManager = new FPSManager();
+        this.inputHandler = new InputHandler();
 
         this.fpsManager.MaxFPS = 0;
         this.fpsManager.MinFPS = Integer.MAX_VALUE;
+    }
+
+
+    public void addInputHandlers(KeyHandler keyHandler, MouseHandler mouseHandler) {
+        this.addKeyListener(this.inputHandler.keyHandler);
+        this.addMouseListener(this.inputHandler.mouseHandler);
+        this.addMouseMotionListener(this.inputHandler.mouseHandler);
+    }
+
+    // Adding to lists
+    public void addControllable(Controllable obj) {
+        obj.setInputHandler(this.inputHandler);
+        controllable.add(obj);
     }
 
     public void addDrawable(Drawable obj) {
@@ -38,7 +66,15 @@ public class Canvas extends JPanel {
         movable.add(obj);
     }
 
+
     public void moveMovable(float deltaTime) {
+        //InputLoop.getInputs();
+        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) System.exit(0);
+
+        for (Controllable ctr : controllable) {
+            
+        }
+
         for (Movable obj : movable) {
             obj.move(deltaTime);
         }
@@ -54,7 +90,7 @@ public class Canvas extends JPanel {
 
         for (Drawable obj : this.drawable) {
             try {
-                obj.draw(g, this.width/2, this.height/2, this.Scale);
+                obj.draw(g, this.OffsetX, this.OffsetY, this.Scale);
             } catch (Exception e) {
             }
         }

@@ -25,7 +25,7 @@ public class Normal implements Drawable {
     }
 
     public Vector2 vectorize() {
-        return new Vector2(this.x, this.y, this.Scale);
+        return new Vector2(this.x, this.y);
     }
 
     @Override

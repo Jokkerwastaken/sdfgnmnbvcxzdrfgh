@@ -6,20 +6,17 @@ import java.awt.Graphics;
 
 public class Vector2 implements Drawable {
     public double x, y;
-    public float Scale;
     public Color Color;
 
-    public Vector2(double x, double y, float scale) {
+    public Vector2(double x, double y) {
         this.x = x;
         this.y = y;
-        this.Scale = scale;
     }
 
-    public Vector2(double x, double y, float scale, Color color) {
+    public Vector2(double x, double y, Color color) {
         this.x = x;
         this.y = y;
         this.Color = color;
-        this.Scale = scale;
     }
 
     public double magnitude() {
@@ -28,8 +25,8 @@ public class Vector2 implements Drawable {
 
     public Vector2 normalize() {
         float mag = (float) magnitude();
-        if (mag <= 1e-9) return new Vector2(0, 0, this.Scale);
-        return new Vector2(this.x / (double) mag, this.y / (double) mag, this.Scale);
+        if (mag <= 1e-9) return new Vector2(0, 0);
+        return new Vector2(this.x / (double) mag, this.y / (double) mag);
     }
 
     public double dotProduct(Vector2 other) {
@@ -105,15 +102,12 @@ public class Vector2 implements Drawable {
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        if (this.Scale == 0 && scale > 1e-9) this.Scale = scale;
-        if (this.Scale != scale) this.Scale = scale;
-        
         if (this.Color == null) return;
 
         g.setColor(this.Color);
         // Draws a line from the offset (origin) to the vector position
         g.drawLine(offsetX, offsetY,
-                    (int)(offsetX + (this.x*this.Scale)),
-                    (int)(offsetY - (this.y*this.Scale)));
+                    (int)(offsetX + (this.x*scale)),
+                    (int)(offsetY - (this.y*scale)));
     }
 }
