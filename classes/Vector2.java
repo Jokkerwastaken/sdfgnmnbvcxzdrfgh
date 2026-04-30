@@ -28,6 +28,7 @@ public class Vector2 implements Drawable {
         if (mag <= 1e-9) return new Vector2(0, 0);
         return new Vector2(this.x / (double) mag, this.y / (double) mag);
     }
+    
 
     public double dotProduct(Vector2 other) {
         return this.x * other.x + this.y * other.y;
@@ -104,10 +105,11 @@ public class Vector2 implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null) return;
 
+        int width = (int)(offsetX + (this.x*scale));
+        int height = (int)(offsetY - (this.y*scale));
+
         g.setColor(this.Color);
         // Draws a line from the offset (origin) to the vector position
-        g.drawLine(offsetX, offsetY,
-                    (int)(offsetX + (this.x*scale)),
-                    (int)(offsetY - (this.y*scale)));
+        g.drawLine(offsetX, offsetY, width, height);
     }
 }

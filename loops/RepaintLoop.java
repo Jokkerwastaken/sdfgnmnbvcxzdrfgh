@@ -1,6 +1,7 @@
 package loops;
 
 import modules.GFrame;
+import objects.Entity;
 
 public class RepaintLoop implements Runnable {
     private final GFrame Frame;
@@ -30,7 +31,13 @@ public class RepaintLoop implements Runnable {
             repLastTime = currentTime;
 
             Frame.canvas.fpsManager.F_deltaTime = deltaTime;
-            if (Frame.canvas.fpsManager.F_samples < Frame.canvas.fpsManager.LastFewFPS.length) Frame.canvas.fpsManager.F_samples++; 
+            if (Frame.canvas.fpsManager.F_samples < Frame.canvas.fpsManager.LastFewFPS.length) Frame.canvas.fpsManager.F_samples++;
+            Entity player = (Entity) this.Frame.canvas.controllable.get(0);
+
+            if (player.Position.screenX >= Frame.width * 0.75) Frame.canvas.OffsetX -= 2;
+            if (player.Position.screenX <= Frame.width * 0.25) Frame.canvas.OffsetX += 2;
+            if (player.Position.screenY >= Frame.height * 0.75) Frame.canvas.OffsetY -= 2;
+            if (player.Position.screenY <= Frame.height * 0.25) Frame.canvas.OffsetY += 2;
             
             Frame.canvas.repaint();
             // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out

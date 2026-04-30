@@ -1,23 +1,22 @@
 package classes;
 
-import java.awt.Graphics;
-import java.awt.Color;
-
 import classes.contracts.Drawable;
+import java.awt.Color;
+import java.awt.Graphics;
+import modules.Canvas;
 
 public class Point2 implements Drawable {
     public double x, y;
+    public int screenX, screenY;
     public Color Color;
     public int Radius;
-    //public float Scale;
 
-    public Point2 (double x, double y, int radius) {
+    public Point2 (double x, double y) {
         this.x = x;
         this.y = y;
 
         this.Color = null;
-        this.Radius = radius;
-        //this.Scale = scale;
+        this.Radius = 0;
     }
 
     public Point2 (double x, double y, int radius, Color color) {
@@ -26,8 +25,18 @@ public class Point2 implements Drawable {
 
         this.Color = color;
         this.Radius = radius;
-        //this.Scale = scale;
     }
+
+    public Point2 (double x, double y, int radius, Color color, Canvas canvas) {
+        this.x = x;
+        this.y = y;
+
+        this.Color = color;
+        this.Radius = radius;
+
+        canvas.addDrawable(this);
+    }
+
 
     public void add(Vector2 vector) {
         this.x += vector.x;
@@ -41,15 +50,18 @@ public class Point2 implements Drawable {
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        if (this.Color == null) return;
+        if (this.Color == null || this.Radius == 0) return;
 
-        int XCoordinate = (int) (offsetX + (this.x*scale) - (this.Radius*scale));
-        int YCoordinate = (int) ((offsetY-(this.y*scale)) - (this.Radius*scale));
+        screenX = (int) (offsetX + (this.x*scale) - (this.Radius*scale));
+        screenY = (int) ((offsetY-(this.y*scale)) - (this.Radius*scale));
+
+        int width = (int)(Radius*2*scale);
+        int height = (int)(Radius*2*scale);
 
         g.setColor(this.Color);
-        g.fillOval(XCoordinate, YCoordinate, (int)(Radius*2*scale), (int)(Radius*2*scale));
+        g.fillOval(screenX, screenY, width, height);
 
         g.setColor(Color.BLACK);
-        g.drawOval(XCoordinate, YCoordinate, (int)(this.Radius*2*scale), (int)(this.Radius*2*scale));
+        g.drawOval(screenX, screenY, width, height);
     }
 }

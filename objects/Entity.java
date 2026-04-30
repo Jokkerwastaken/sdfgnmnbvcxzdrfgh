@@ -5,13 +5,12 @@ import classes.Vector2;
 import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
-import modules.GFrame;
-import objects.modules.Moving;
-import loops.InputHandler;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import loops.InputHandler;
+import modules.GFrame;
+import objects.modules.Moving;
 
 public class Entity implements Drawable, Movable, Controllable {
     public Point2 Position;
@@ -22,11 +21,12 @@ public class Entity implements Drawable, Movable, Controllable {
     private boolean debug;
     private float ScaleToFrame;
 
-    public Entity(Point2 position, Vector2 velocity, Color color, boolean gravityApplied, GFrame frame) {
+    public Entity(Point2 position, Vector2 velocity, int Radius, Color color, boolean gravityApplied, GFrame frame) {
         this.Position = position;
         this.moveHandler = new Moving(this, velocity, gravityApplied);
 
         this.Position.Color = color;
+        this.Position.Radius = Radius;
         
         // Adds itself to canvas's lists just because
         if (frame == null) return;

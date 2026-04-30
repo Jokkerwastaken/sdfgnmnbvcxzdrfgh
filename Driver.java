@@ -10,15 +10,6 @@ import objects.Entity;
 public class Driver implements Runnable {
     public final long startTime = System.nanoTime();    // Not gonna change
 
-    // Points
-    private final Point2 point = new Point2(0, 0, 10);
-    private final Point2 point2 = new Point2(0, 0, 5);
-    private final Point2 point3 = new Point2(0, 0, 30);
-    // Vectors
-    private final Vector2 vector = new Vector2(30, 20, Color.GREEN);
-    private final Vector2 vector2 = new Vector2(-10, 4, Color.GREEN);
-    private final Vector2 vector3 = new Vector2(0, 0, Color.GREEN);
-
     //fps
     private final float FPSLimit = 60;
 
@@ -52,8 +43,13 @@ public class Driver implements Runnable {
         //new Entity(point, vector, Color.RED, true, frame);
         //new Entity(point2, vector2, Color.BLUE, true, frame);
         //new Entity(point3, vector3, Color.BLUE, true, frame);
-        
-        Entity player = new Entity(new Point2(0, 0, 5), new Vector2(-10, 0, Color.GREEN), Color.BLACK, false, frame);
+
+        for (int x = -80; x < 80; x++) for (int y = -60; y < 60; y++) {
+            new Line(new Point2(x*50, y*50), new Vector2(0, 50), Color.lightGray, frame.canvas);
+            new Line(new Point2(x*50, y*50), new Vector2(50, 0), Color.lightGray, frame.canvas);
+        }
+
+        Entity player = new Entity(new Point2(0, 0), new Vector2(0, 0, Color.GREEN), 5, Color.BLACK, false, frame);
         player.makeControllable(frame);
 
         frame.canvas.fpsManager.FPSLimit = this.FPSLimit;

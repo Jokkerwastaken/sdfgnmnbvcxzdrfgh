@@ -15,9 +15,9 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     //Canvas stuff
     public int width, height;
-    public float Scale = 2f;
+    public float Scale = 1f;
     public int OffsetX, OffsetY;
-    public final boolean debug = false;
+    public final boolean debug = true;
 
     // Input handler;
     private final InputHandler inputHandler;
@@ -71,13 +71,7 @@ public class Canvas extends JPanel {
         //InputLoop.getInputs();
         if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) System.exit(0);
 
-        for (Controllable ctr : controllable) {
-            
-        }
-
-        for (Movable obj : movable) {
-            obj.move(deltaTime);
-        }
+        for (Movable obj : movable) obj.move(deltaTime);
     }
 
     public void fpsManager() {
