@@ -5,12 +5,13 @@ import classes.Vector2;
 import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import loops.InputHandler;
 import modules.GFrame;
 import objects.modules.Moving;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 public class Entity implements Drawable, Movable, Controllable {
     public Point2 Position;
@@ -46,13 +47,12 @@ public class Entity implements Drawable, Movable, Controllable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.ScaleToFrame != scale) this.ScaleToFrame = scale;
 
-        Position.draw(g, offsetX, offsetY, ScaleToFrame);
+        int OffsetX = offsetX + (int)(this.Position.x*scale);
+        int OffsetY = offsetY - (int)(this.Position.y*scale);
 
-        if (debug) {
-            for (Vector2 elem : moveHandler.AppliedVectors) {
-                elem.draw(g, offsetX + (int)(this.Position.x*scale),
-                             offsetY - (int)(this.Position.y*scale), this.ScaleToFrame);
-            }
+        Position.draw(g, OffsetX, OffsetY, scale);
+        if (debug) for (Vector2 elem : moveHandler.AppliedVectors) {
+            elem.draw(g, OffsetX, OffsetY, scale);
         }
     }
 
@@ -72,7 +72,7 @@ public class Entity implements Drawable, Movable, Controllable {
 
     @Override
     public void move(float deltaTime) {
-        if (this.inputHandler != null)input();
+        if (this.inputHandler != null) input();
         moveHandler.move(deltaTime);
     }
 }

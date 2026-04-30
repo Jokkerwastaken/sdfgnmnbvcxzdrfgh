@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     //Canvas stuff
     public int width, height;
-    public float Scale = 1f;
+    public float Scale = 2f;
     public int OffsetX, OffsetY;
     public final boolean debug = true;
 
@@ -52,6 +52,11 @@ public class Canvas extends JPanel {
         this.addMouseMotionListener(this.inputHandler.mouseHandler);
     }
 
+    private void getInputs() {
+        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) System.exit(0);
+    }
+
+
     // Adding to lists
     public void addControllable(Controllable obj) {
         obj.setInputHandler(this.inputHandler);
@@ -68,9 +73,7 @@ public class Canvas extends JPanel {
 
 
     public void moveMovable(float deltaTime) {
-        //InputLoop.getInputs();
-        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) System.exit(0);
-
+        getInputs();
         for (Movable obj : movable) obj.move(deltaTime);
     }
 
@@ -82,12 +85,9 @@ public class Canvas extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (Drawable obj : this.drawable) {
-            try {
-                obj.draw(g, this.OffsetX, this.OffsetY, this.Scale);
-            } catch (Exception e) {
-            }
-        }
+        for (Drawable obj : this.drawable) try {
+            obj.draw(g, this.OffsetX, this.OffsetY, this.Scale);
+        } catch (Exception e) {}
 
         // UI
         if (fpsManager.F_deltaTime == 0) return;

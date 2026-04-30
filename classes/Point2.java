@@ -52,8 +52,8 @@ public class Point2 implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null || this.Radius == 0) return;
 
-        screenX = (int) (offsetX + (this.x*scale) - (this.Radius*scale));
-        screenY = (int) ((offsetY-(this.y*scale)) - (this.Radius*scale));
+        screenX = (int) (offsetX - (this.Radius*scale));
+        screenY = (int) (offsetY - (this.Radius*scale));
 
         int width = (int)(Radius*2*scale);
         int height = (int)(Radius*2*scale);
