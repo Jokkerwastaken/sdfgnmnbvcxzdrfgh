@@ -5,7 +5,7 @@ import classes.Vector2;
 import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
-import loops.InputHandler;
+import modules.inputs.InputHandler;
 import modules.GFrame;
 import objects.modules.Moving;
 
@@ -37,11 +37,19 @@ public class Entity implements Drawable, Movable, Controllable {
         this.debug = frame.canvas.debug;
     }
 
+    public Point2 getPosition() {
+        return this.Position;
+    }
 
     public void makeControllable(GFrame frame) {
         frame.canvas.addControllable(this);
     }
 
+
+    @Override
+    public void setAlpha(float alpha) {
+        this.Position.setAlpha(alpha);
+    }
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {

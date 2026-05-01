@@ -7,6 +7,7 @@ import java.awt.Graphics;
 public class Vector2 implements Drawable {
     public double x, y;
     public Color Color;
+    public float alpha;
 
     public Vector2(double x, double y) {
         this.x = x;
@@ -17,6 +18,7 @@ public class Vector2 implements Drawable {
         this.x = x;
         this.y = y;
         this.Color = color;
+        this.alpha = this.Color.getAlpha();
     }
 
     public double magnitude() {
@@ -100,6 +102,11 @@ public class Vector2 implements Drawable {
         this.y /= value;
     }
 
+    
+    @Override
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
@@ -108,7 +115,10 @@ public class Vector2 implements Drawable {
         int width = (int)(offsetX + (this.x*scale));
         int height = (int)(offsetY - (this.y*scale));
 
-        g.setColor(this.Color);
+        System.out.println(this.Color.getAlpha());
+        g.setColor(new Color(this.Color.getRed(), this.Color.getGreen(), this.Color.getBlue(), (int)(Color.getAlpha()*this.alpha)));
+        System.out.println(g.getColor().getAlpha());
+        
         // Draws a line from the offset (origin) to the vector position
         g.drawLine(offsetX, offsetY, width, height);
     }

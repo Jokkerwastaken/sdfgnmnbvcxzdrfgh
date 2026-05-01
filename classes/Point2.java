@@ -9,6 +9,7 @@ public class Point2 implements Drawable {
     public double x, y;
     public int screenX, screenY;
     public Color Color;
+    public float alpha;
     public int Radius;
 
     public Point2 (double x, double y) {
@@ -49,6 +50,11 @@ public class Point2 implements Drawable {
     }
 
     @Override
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
+
+    @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null || this.Radius == 0) return;
 
@@ -59,6 +65,7 @@ public class Point2 implements Drawable {
         int height = (int)(Radius*2*scale);
 
         g.setColor(this.Color);
+        g.setColor(new Color(this.Color.getRed(), this.Color.getGreen(), this.Color.getBlue(), (int)(Color.getAlpha()*this.alpha)));
         g.fillOval(screenX, screenY, width, height);
 
         g.setColor(Color.BLACK);

@@ -9,26 +9,29 @@ import objects.Entity;
 
 public class Driver implements Runnable {
     public final long startTime = System.nanoTime();    // Not gonna change
+    private Thread repaintThread, phyThread;
 
     //fps
     private final float FPSLimit = 60;
 
+    private PhysicsLoop gameLoop;
+
     private void ThreadAndTimerInits(GFrame frame) {
-        Thread repaintThread = new Thread() {
+        this.repaintThread = new Thread() {
             public void run() {
                 RepaintLoop repaintLoop = new RepaintLoop(frame, FPSLimit);
                 repaintLoop.run();
             }
         };
-        repaintThread.start();
+        this.repaintThread.start();
 
-        Thread phyThread = new Thread() {
+        this.phyThread = new Thread() {
             public void run() {
-                PhysicsLoop gameLoop = new PhysicsLoop(frame);
+                gameLoop = new PhysicsLoop(frame);
                 gameLoop.run();
             }
         };
-        phyThread.start();
+        this.phyThread.start();
 
         Timer fpsTimer = new Timer(1000, e -> {
             frame.canvas.fpsManager();
@@ -48,7 +51,7 @@ public class Driver implements Runnable {
         Entity player = new Entity(new Point2(0, 0), new Vector2(0, 0, Color.GREEN), 5, Color.BLACK, false, frame);
         player.makeControllable(frame);
 
-        frame.canvas.fpsManager.FPSLimit = this.FPSLimit;
+        frame.canvas.fps.fpsManager.FPSLimit = this.FPSLimit;
 
         ThreadAndTimerInits(frame);
 

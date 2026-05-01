@@ -1,5 +1,6 @@
 package loops;
 
+import modules.FPSManager;
 import modules.GFrame;
 import objects.Entity;
 
@@ -19,6 +20,22 @@ public class RepaintLoop implements Runnable {
         }
     }
 
+    private void fps(float deltaTime) {
+        FPSManager fps = Frame.canvas.fps.fpsManager;
+        
+        fps.F_deltaTime = deltaTime;
+        if (fps.F_samples < fps.LastFewFPS.length) fps.F_samples++;
+    }
+
+    private void keepPlayerInFrame() {
+        Entity player = (Entity) this.Frame.canvas.controllable.get(0);
+
+        if (player.Position.screenX >= Frame.width * 0.75) Frame.canvas.OffsetX -= 2;
+        if (player.Position.screenX <= Frame.width * 0.25) Frame.canvas.OffsetX += 2;
+        if (player.Position.screenY >= Frame.height * 0.75) Frame.canvas.OffsetY -= 2;
+        if (player.Position.screenY <= Frame.height * 0.25) Frame.canvas.OffsetY += 2;
+    }
+
     @Override
     public void run() {
         long repLastTime = System.nanoTime();
@@ -30,15 +47,9 @@ public class RepaintLoop implements Runnable {
             deltaTime = (currentTime - repLastTime) / 1_000_000_000.0f;
             repLastTime = currentTime;
 
-            Frame.canvas.fpsManager.F_deltaTime = deltaTime;
-            if (Frame.canvas.fpsManager.F_samples < Frame.canvas.fpsManager.LastFewFPS.length) Frame.canvas.fpsManager.F_samples++;
-            Entity player = (Entity) this.Frame.canvas.controllable.get(0);
+            fps(deltaTime);
 
-            if (player.Position.screenX >= Frame.width * 0.75) Frame.canvas.OffsetX -= 2;
-            if (player.Position.screenX <= Frame.width * 0.25) Frame.canvas.OffsetX += 2;
-            if (player.Position.screenY >= Frame.height * 0.75) Frame.canvas.OffsetY -= 2;
-            if (player.Position.screenY <= Frame.height * 0.25) Frame.canvas.OffsetY += 2;
-            
+            keepPlayerInFrame();
             Frame.canvas.repaint();
             // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out
             // Frame.canvas.OffsetY -= 1;       // Example use of screen offset which in this case is redused 

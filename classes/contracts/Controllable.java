@@ -1,7 +1,6 @@
 package classes.contracts;
 
-import loops.InputHandler;
-
+import modules.inputs.InputHandler;
 
 public interface Controllable {
     public void setInputHandler(InputHandler inputHandler);

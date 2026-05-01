@@ -3,8 +3,10 @@ package modules;
 import classes.contracts.Controllable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
-import loops.InputHandler;
+import loops.PhysicsLoop;
 import modules.inputs.*;
+import modules.interfaces.*;
+import objects.Entity;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -13,17 +15,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
 
 public class Canvas extends JPanel {
-    //Canvas stuff
+    // Canvas stuff
     public int width, height;
     public float Scale = 2f;
     public int OffsetX, OffsetY;
-    public final boolean debug = true;
+    public final boolean debug = false;
+
+    // Interfaces
+    private Pause pause;
+    public FPS fps;
 
     // Input handler;
     private final InputHandler inputHandler;
 
-    // FPS
-    public final FPSManager fpsManager;
+    // Threads
+    public PhysicsLoop phyThread;
+
+    // Physics
     public float P_deltaTime;
 
     // Lists
@@ -38,11 +46,10 @@ public class Canvas extends JPanel {
         this.OffsetX = width/2;
         this.OffsetY = height/2;
 
-        this.fpsManager = new FPSManager();
-        this.inputHandler = new InputHandler();
+        this.pause = new Pause();
+        this.fps = new FPS();
 
-        this.fpsManager.MaxFPS = 0;
-        this.fpsManager.MinFPS = Integer.MAX_VALUE;
+        this.inputHandler = new InputHandler();
     }
 
 
@@ -52,8 +59,17 @@ public class Canvas extends JPanel {
         this.addMouseMotionListener(this.inputHandler.mouseHandler);
     }
 
-    private void getInputs() {
-        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) System.exit(0);
+    public void getInputs(PhysicsLoop gameLoop) {
+        if (this.pause.framesFromPause < 20) {
+            this.pause.framesFromPause++;
+            return;
+        }
+        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) {
+            this.pause.paused = !this.pause.paused;
+            this.pause.framesFromPause = 0;
+        }
+
+        this.phyThread.paused = this.pause.paused;
     }
 
 
@@ -73,33 +89,30 @@ public class Canvas extends JPanel {
 
 
     public void moveMovable(float deltaTime) {
-        getInputs();
         for (Movable obj : movable) obj.move(deltaTime);
     }
 
     public void fpsManager() {
-        fpsManager.manage();
+        this.fps.manageFPS();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        float A = pause.paused ? 0.6f : 1f;
+
+        g.setColor(new Color(255, 255, 255, (int)(255 * A)));
+        g.fillRect(0,0,width,height);
+        
         for (Drawable obj : this.drawable) try {
+            obj.setAlpha(A);
             obj.draw(g, this.OffsetX, this.OffsetY, this.Scale);
         } catch (Exception e) {}
 
         // UI
-        if (fpsManager.F_deltaTime == 0) return;
-        fpsManager.LastFewFPS[fpsManager.Count % fpsManager.LastFewFPS.length] = (int)(1.0 / fpsManager.F_deltaTime);
-        fpsManager.Count = (fpsManager.Count + 1) % fpsManager.LastFewFPS.length;
+        pause.draw(g);
 
-        if (fpsManager.F_deltaTime > 0) {
-            g.setColor(Color.BLACK);
-            
-            g.drawString("Max FPS: " + fpsManager.MaxFPS, 30, 30);
-            g.drawString("Avg FPS: " + fpsManager.AverageFPS, 30, 50);
-            g.drawString("Min FPS: " + (fpsManager.MinFPS == Integer.MAX_VALUE ? 0 : fpsManager.MinFPS), 30, 70);
-        }
+        fps.draw(g);
     }
 }

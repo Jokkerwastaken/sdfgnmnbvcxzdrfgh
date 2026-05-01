@@ -21,6 +21,11 @@ public class Normal implements Drawable {
     }
 
     @Override
+    public void setAlpha(float alpha) {
+        this.Vector.setAlpha(alpha);
+    }
+
+    @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         Vector.draw(g, offsetX, offsetY, scale);
     }

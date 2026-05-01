@@ -1,6 +1,4 @@
-package loops;
-
-import modules.inputs.*;
+package modules.inputs;
 
 public class InputHandler implements Runnable {
     public KeyHandler keyHandler;
@@ -13,8 +11,6 @@ public class InputHandler implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-
-        }
+        
     }
 }

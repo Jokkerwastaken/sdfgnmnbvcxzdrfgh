@@ -19,6 +19,7 @@ public class GFrame extends JFrame {
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
 
+        setBackground(Color.BLACK);
 
         canvas = new Canvas(width, height);
         canvas.addInputHandlers(keyHandler, mouseHandler);
