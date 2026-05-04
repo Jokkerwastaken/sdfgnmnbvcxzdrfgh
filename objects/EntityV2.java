@@ -1,0 +1,93 @@
+package objects;
+
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+
+import classes.Point2;
+import classes.Vector2;
+import classes.contracts.Controllable;
+import classes.contracts.Drawable;
+import classes.contracts.Movable;
+import modules.GFrame;
+import modules.inputs.InputHandler;
+import objects.modules.MovingV2;
+
+public class EntityV2 implements Drawable, Movable, Controllable {
+    private final GFrame frame;
+    public final MovingV2 moveHandler;
+    public final Point2 position;
+    public InputHandler inputHandler;
+
+    private boolean debug;
+
+    public EntityV2(Point2 position, int Radius, Color color, float gravityApplied, GFrame frame) {
+        this.frame = frame;
+        this.position = position;
+        this.position.Color = color;
+        this.position.Radius = Radius;
+        this.position.parent = this;
+
+        // Moving
+        this.moveHandler = new MovingV2(this, gravityApplied);
+        this.moveHandler.gravityNormalized = new Vector2(1, 1);
+        this.moveHandler.maxSpeed = 100;
+
+        // Adding to lists
+        this.frame.canvas.addMovable(this);
+        this.frame.canvas.addDrawable(this);
+
+        this.debug = this.frame.canvas.debug;
+    }
+
+    public void makeControllable() throws Exception {
+        if (this.frame == null) throw new Exception("Cannot access frame to make this entity controllable!");
+        this.frame.canvas.addControllable(this);
+        
+    }
+
+
+    // Drawable contract
+    @Override
+    public void setAlpha(float alpha) {
+        this.position.setAlpha(alpha);
+    }
+
+    @Override
+    public boolean inScreen() {
+        boolean inX = (this.position.screenX+(2*this.position.Radius * this.frame.canvas.Scale) >= 0 && this.position.screenX+(this.position.Radius * this.frame.canvas.Scale) <= this.frame.width);
+        boolean inY = (this.position.screenY+(2*this.position.Radius * this.frame.canvas.Scale) >= 0 && this.position.screenY-(this.position.Radius * this.frame.canvas.Scale) <= this.frame.height);
+
+        return inX && inY;
+    }
+
+    @Override
+    public void draw(Graphics g, int offsetX, int offsetY, float scale) {
+        position.draw(g, offsetX, offsetY, scale);
+        if (debug) for (Vector2 elem : moveHandler.getVectors()) {
+            elem.draw(g, offsetX, offsetY, scale);
+        }
+    }
+    
+
+    // Movable contract
+    @Override
+    public void move(float deltaTime) {
+        if (this.inputHandler != null) input();
+        moveHandler.move(deltaTime);
+    }
+
+    private void input() {
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_D)) this.moveHandler.velocity.x -= 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_A)) this.moveHandler.velocity.x += 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_W)) this.moveHandler.velocity.y -= 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_S)) this.moveHandler.velocity.y += 1;
+    }
+
+
+    // Controllable contract
+    @Override
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
+    }
+}

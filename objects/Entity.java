@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 
 public class Entity implements Drawable, Movable, Controllable {
     public Point2 Position;
+    private GFrame frame;
 
     private final Moving moveHandler;
     private InputHandler inputHandler;
@@ -31,18 +32,19 @@ public class Entity implements Drawable, Movable, Controllable {
         
         // Adds itself to canvas's lists just because
         if (frame == null) return;
-        frame.canvas.addMovable(this);
-        frame.canvas.addDrawable(this);
+        this.frame = frame;
+        this.frame.canvas.addMovable(this);
+        this.frame.canvas.addDrawable(this);
 
-        this.debug = frame.canvas.debug;
+        this.debug = this.frame.canvas.debug;
     }
 
     public Point2 getPosition() {
         return this.Position;
     }
 
-    public void makeControllable(GFrame frame) {
-        frame.canvas.addControllable(this);
+    public void makeControllable() {
+        if (this.frame != null) this.frame.canvas.addControllable(this);
     }
 
 
@@ -55,12 +57,9 @@ public class Entity implements Drawable, Movable, Controllable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.ScaleToFrame != scale) this.ScaleToFrame = scale;
 
-        int OffsetX = offsetX + (int)(this.Position.x*scale);
-        int OffsetY = offsetY - (int)(this.Position.y*scale);
-
-        Position.draw(g, OffsetX, OffsetY, scale);
+        Position.draw(g, offsetX, offsetY, scale);
         if (debug) for (Vector2 elem : moveHandler.AppliedVectors) {
-            elem.draw(g, OffsetX, OffsetY, scale);
+            elem.draw(g, offsetX, offsetY, scale);
         }
     }
 
@@ -74,13 +73,18 @@ public class Entity implements Drawable, Movable, Controllable {
     private void input() {
         if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_D)) this.moveHandler.Velocity.x += 1;
         if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_A)) this.moveHandler.Velocity.x -= 1;
-        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_W)) this.moveHandler.Velocity.y += 1;
-        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_S)) this.moveHandler.Velocity.y -= 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_W)) this.moveHandler.Velocity.y -= 1;
+        if (inputHandler.keyHandler.getKeyState(KeyEvent.VK_S)) this.moveHandler.Velocity.y += 1;
     }
 
     @Override
     public void move(float deltaTime) {
         if (this.inputHandler != null) input();
         moveHandler.move(deltaTime);
+    }
+
+    @Override
+    public boolean inScreen() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

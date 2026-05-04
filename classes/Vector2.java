@@ -1,11 +1,16 @@
 package classes;
 
 import classes.contracts.Drawable;
+import modules.Canvas;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import objects.EntityV2;
 
 public class Vector2 implements Drawable {
+    public EntityV2 parent;
     public double x, y;
+    public int screenX, screenY;    
     public Color Color;
     public float alpha;
 
@@ -14,11 +19,13 @@ public class Vector2 implements Drawable {
         this.y = y;
     }
 
-    public Vector2(double x, double y, Color color) {
+    public Vector2(double x, double y, Color color, Canvas canvas) {
         this.x = x;
         this.y = y;
         this.Color = color;
         this.alpha = this.Color.getAlpha();
+
+        if (canvas != null) canvas.addDrawable(this);
     }
 
     public double magnitude() {
@@ -112,14 +119,24 @@ public class Vector2 implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null) return;
 
-        int width = (int)(offsetX + (this.x*scale));
-        int height = (int)(offsetY - (this.y*scale));
+        screenX = (int) offsetX;
+        screenY = (int) offsetY;
 
-        System.out.println(this.Color.getAlpha());
+        if (parent != null && !parent.inScreen()) return;       // Cancels painting object if not in screen  
+
+        int width = (int) (this.x*scale);   // For some reason the width and height remain 0 after this point no mather what
+        int height = (int) (this.y*scale);
+
+        //System.out.println("X: "+screenX+" Y: "+screenY+", W: "+width+", H: "+height);        
+
         g.setColor(new Color(this.Color.getRed(), this.Color.getGreen(), this.Color.getBlue(), (int)(Color.getAlpha()*this.alpha)));
-        System.out.println(g.getColor().getAlpha());
-        
         // Draws a line from the offset (origin) to the vector position
-        g.drawLine(offsetX, offsetY, width, height);
+        g.drawLine(screenX, screenY, screenX + width, screenY - height);
+    }
+
+    @Override
+    public boolean inScreen() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'inScreen'");
     }
 }

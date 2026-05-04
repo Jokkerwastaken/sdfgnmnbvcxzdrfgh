@@ -29,4 +29,10 @@ public class Normal implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         Vector.draw(g, offsetX, offsetY, scale);
     }
+
+    @Override
+    public boolean inScreen() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'inScreen'");
+    }
 }

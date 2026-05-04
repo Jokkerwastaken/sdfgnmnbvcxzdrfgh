@@ -27,7 +27,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        MouseStates[e.getButton()] = true;
+        MouseStates[e.getButton()] = false;
     }
 
     @Override

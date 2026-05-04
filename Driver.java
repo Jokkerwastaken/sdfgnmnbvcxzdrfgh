@@ -1,18 +1,17 @@
+import classes.*;
 import java.awt.Color;
 import javax.swing.Timer;
-
-import classes.*;
 import loops.PhysicsLoop;
 import loops.RepaintLoop;
 import modules.GFrame;
-import objects.Entity;
+import objects.EntityV2;
 
 public class Driver implements Runnable {
     public final long startTime = System.nanoTime();    // Not gonna change
     private Thread repaintThread, phyThread;
 
     //fps
-    private final float FPSLimit = 60;
+    private final float FPSLimit = 1000;
 
     private PhysicsLoop gameLoop;
 
@@ -21,6 +20,7 @@ public class Driver implements Runnable {
             public void run() {
                 RepaintLoop repaintLoop = new RepaintLoop(frame, FPSLimit);
                 repaintLoop.run();
+                repaintLoop.keepPlayerInFrame();
             }
         };
         this.repaintThread.start();
@@ -43,13 +43,18 @@ public class Driver implements Runnable {
     public void run() {
         GFrame frame = new GFrame();
         
-        for (int x = -80; x < 80; x++) for (int y = -60; y < 60; y++) {
-            new Line(new Point2(x*50, y*50), new Vector2(0, 50), Color.lightGray, frame.canvas);
-            new Line(new Point2(x*50, y*50), new Vector2(50, 0), Color.lightGray, frame.canvas);
-        }
+        //new Vector2(50, 50, Color.BLACK, frame.canvas);
 
-        Entity player = new Entity(new Point2(0, 0), new Vector2(0, 0, Color.GREEN), 5, Color.BLACK, false, frame);
-        player.makeControllable(frame);
+        new Grid(frame);
+
+        //Entity player = new Entity(new Point2(0, 0), new Vector2(0, 0, Color.GREEN, null), 5, Color.BLACK, false, frame);
+        //player.makeControllable();
+
+        try {
+            new EntityV2(new Point2(0, 0), 5, Color.BLUE, 0, frame).makeControllable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         frame.canvas.fps.fpsManager.FPSLimit = this.FPSLimit;
 

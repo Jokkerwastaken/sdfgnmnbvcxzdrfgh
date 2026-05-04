@@ -2,6 +2,7 @@ package modules;
 
 import java.awt.*;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 import modules.inputs.*;
 
@@ -11,7 +12,7 @@ public class GFrame extends JFrame {
 
     public Canvas canvas;
 
-    public GFrame () {
+    public GFrame() {
         setPreferredSize(new Dimension(width, height));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -19,7 +20,6 @@ public class GFrame extends JFrame {
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
 
-        setBackground(Color.BLACK);
 
         canvas = new Canvas(width, height);
         canvas.addInputHandlers(keyHandler, mouseHandler);
@@ -29,6 +29,16 @@ public class GFrame extends JFrame {
         this.pack();
         setVisible(true);
         requestFocus(true);
+
+        getNewWD(canvas);
+    }
+
+    private void getNewWD(Canvas canvas) {
+        Timer WD = new Timer(200, e -> {
+            canvas.width = this.getWidth();
+            canvas.height = this.getHeight();
+        });
+        WD.start();
     }
 
     public boolean IsTimedout() {

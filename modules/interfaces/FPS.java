@@ -24,6 +24,7 @@ public class FPS implements DrawableInterface {
 
         if (this.fpsManager.F_deltaTime > 0) {
             g.setColor(Color.BLACK);
+            g.setFont(g.getFont().deriveFont(12f));
             
             g.drawString("Max FPS: " + this.fpsManager.MaxFPS, 30, 30);
             g.drawString("Avg FPS: " + this.fpsManager.AverageFPS, 30, 50);

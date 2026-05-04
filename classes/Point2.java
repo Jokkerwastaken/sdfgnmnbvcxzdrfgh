@@ -4,8 +4,10 @@ import classes.contracts.Drawable;
 import java.awt.Color;
 import java.awt.Graphics;
 import modules.Canvas;
+import objects.EntityV2;
 
 public class Point2 implements Drawable {
+    public EntityV2 parent;
     public double x, y;
     public int screenX, screenY;
     public Color Color;
@@ -58,8 +60,11 @@ public class Point2 implements Drawable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.Color == null || this.Radius == 0) return;
 
-        screenX = (int) (offsetX - (this.Radius*scale));
-        screenY = (int) (offsetY - (this.Radius*scale));
+        screenX = (int) (offsetX - this.x * scale - (this.Radius*scale));
+        screenY = (int) (offsetY + this.y * scale - (this.Radius*scale));
+
+        if (parent != null && !parent.inScreen()) return;       // Cancels painting object if not in screen  
+
 
         int width = (int)(Radius*2*scale);
         int height = (int)(Radius*2*scale);
@@ -70,5 +75,10 @@ public class Point2 implements Drawable {
 
         g.setColor(Color.BLACK);
         g.drawOval(screenX, screenY, width, height);
+    }
+
+    @Override
+    public boolean inScreen() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

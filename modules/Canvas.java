@@ -6,7 +6,6 @@ import classes.contracts.Movable;
 import loops.PhysicsLoop;
 import modules.inputs.*;
 import modules.interfaces.*;
-import objects.Entity;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,13 +15,13 @@ import javax.swing.JPanel;
 
 public class Canvas extends JPanel {
     // Canvas stuff
-    public int width, height;
-    public float Scale = 2f;
+    public int width, height, centerX, centerY;
+    public float Scale = 1f;
     public int OffsetX, OffsetY;
-    public final boolean debug = false;
+    public final boolean debug = true;
 
     // Interfaces
-    private Pause pause;
+    private final Pause pause;
     public FPS fps;
 
     // Input handler;
@@ -43,10 +42,13 @@ public class Canvas extends JPanel {
         this.width = width;
         this.height = height;
 
-        this.OffsetX = width/2;
-        this.OffsetY = height/2;
+        this.centerX = width/2;
+        this.centerY = height/2;
 
-        this.pause = new Pause();
+        this.OffsetX = 0;
+        this.OffsetY = 0;
+
+        this.pause = new Pause(this);
         this.fps = new FPS();
 
         this.inputHandler = new InputHandler();
@@ -88,26 +90,35 @@ public class Canvas extends JPanel {
     }
 
 
+
     public void moveMovable(float deltaTime) {
         for (Movable obj : movable) obj.move(deltaTime);
     }
+
+
 
     public void fpsManager() {
         this.fps.manageFPS();
     }
 
+
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        this.centerX = this.width/2 + this.OffsetX;
+        this.centerY = this.height/2 + this.OffsetY;
 
-        float A = pause.paused ? 0.6f : 1f;
+        super.paintComponent(g);
+        
+        setBackground(Color.BLACK);
+
+        float A = pause.paused ? 0.2f : 1f;
 
         g.setColor(new Color(255, 255, 255, (int)(255 * A)));
         g.fillRect(0,0,width,height);
         
         for (Drawable obj : this.drawable) try {
             obj.setAlpha(A);
-            obj.draw(g, this.OffsetX, this.OffsetY, this.Scale);
+            obj.draw(g, centerX + this.OffsetX, centerY + this.OffsetY, this.Scale);
         } catch (Exception e) {}
 
         // UI

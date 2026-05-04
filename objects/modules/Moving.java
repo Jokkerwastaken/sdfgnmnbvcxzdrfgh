@@ -1,11 +1,9 @@
 package objects.modules;
 
-import objects.Entity;
-
+import classes.Vector2;
 import java.awt.Color;
 import java.util.ArrayList;
-
-import classes.Vector2;
+import objects.Entity;
 
 public class Moving {
     private final Entity parent;
@@ -36,8 +34,8 @@ public class Moving {
 
         this.AppliedVectors = new ArrayList<>();
         this.AppliedVectors.add(this.Velocity);                                   // Moving Vector
-        if (gravityApplied) this.AppliedVectors.add(new Vector2(0, -15, Color.PINK));      // Gravity Vector
-        this.AppliedVectors.add(new Vector2(10, 0, Color.YELLOW));                      // Heading vector
+        if (gravityApplied) this.AppliedVectors.add(new Vector2(0, -15, Color.PINK, null));      // Gravity Vector
+        this.AppliedVectors.add(new Vector2(10, 0, Color.YELLOW, null));                      // Heading vector
     }
 
 

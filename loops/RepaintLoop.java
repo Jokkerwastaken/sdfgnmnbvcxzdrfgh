@@ -2,7 +2,7 @@ package loops;
 
 import modules.FPSManager;
 import modules.GFrame;
-import objects.Entity;
+import objects.EntityV2;
 
 public class RepaintLoop implements Runnable {
     private final GFrame Frame;
@@ -27,13 +27,14 @@ public class RepaintLoop implements Runnable {
         if (fps.F_samples < fps.LastFewFPS.length) fps.F_samples++;
     }
 
-    private void keepPlayerInFrame() {
-        Entity player = (Entity) this.Frame.canvas.controllable.get(0);
-
-        if (player.Position.screenX >= Frame.width * 0.75) Frame.canvas.OffsetX -= 2;
-        if (player.Position.screenX <= Frame.width * 0.25) Frame.canvas.OffsetX += 2;
-        if (player.Position.screenY >= Frame.height * 0.75) Frame.canvas.OffsetY -= 2;
-        if (player.Position.screenY <= Frame.height * 0.25) Frame.canvas.OffsetY += 2;
+    public void keepPlayerInFrame() {
+        EntityV2 player = (EntityV2) this.Frame.canvas.controllable.get(0);
+        while (true) {
+            if (player.position.screenX >= Frame.canvas.centerX * 1.5) Frame.canvas.OffsetX -= 2;
+            if (player.position.screenX <= Frame.canvas.centerX * 0.5) Frame.canvas.OffsetX += 2;
+            if (player.position.screenY >= Frame.canvas.centerY * 1.5) Frame.canvas.OffsetY -= 2;
+            if (player.position.screenY <= Frame.canvas.centerY * 0.5) Frame.canvas.OffsetY += 2;
+        }
     }
 
     @Override
@@ -49,7 +50,7 @@ public class RepaintLoop implements Runnable {
 
             fps(deltaTime);
 
-            keepPlayerInFrame();
+            //keepPlayerInFrame();
             Frame.canvas.repaint();
             // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out
             // Frame.canvas.OffsetY -= 1;       // Example use of screen offset which in this case is redused 

@@ -22,12 +22,18 @@ public class Line implements Drawable {
         this.Color = Color;
         this.alpha = 1f;
 
-        Canvas.addDrawable(this);
+        if (Canvas != null) Canvas.addDrawable(this);
     }
 
     @Override
     public void setAlpha(float alpha) {
         this.alpha = alpha;
+    }
+    
+    @Override
+    public boolean inScreen() {
+        return true;
+        //return (screenX);
     }
 
     @Override
@@ -37,14 +43,14 @@ public class Line implements Drawable {
         x2 = this.x + this.LengthX;
         y2 = this.y + this.LengthY;
     
-        int screenX1 = (int)(offsetX + this.x * scale);
-        int screenY1 = (int)(offsetY - this.y * scale);
+        this.screenX = (int)(offsetX + this.x * scale);
+        this.screenY = (int)(offsetY - this.y * scale);
 
-        int screenX2 = (int)(offsetX + x2 * scale);
-        int screenY2 = (int)(offsetY - y2 * scale);
+        int width = (int)(offsetX + x2 * scale);
+        int height = (int)(offsetY - y2 * scale);
 
         g.setColor(new Color(this.Color.getRed(), this.Color.getGreen(), this.Color.getBlue(), (int)(Color.getAlpha()*this.alpha)));
-        g.drawLine(screenX1, screenY1, screenX2, screenY2);
+        g.drawLine(screenX, screenY, width, height);
     }
     
     /* //Fun zone
