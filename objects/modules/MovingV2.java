@@ -1,16 +1,15 @@
 package objects.modules;
 
 import java.util.ArrayList;
-import java.awt.Color;
 
-import classes.Vector2;
+import classes.Vector2V2;
 import objects.EntityV2;
 
 public class MovingV2 {
     private final EntityV2 parent;
-    private final ArrayList<Vector2> appliedVectors;
+    public final ArrayList<Vector2V2> appliedVectors;
 
-    public Vector2 velocity, gravityNormalized;
+    public Vector2V2 velocity, gravityNormalized;
     public float gravityApplied;
     public double airFriction;
     public double angle, angularVelocity;
@@ -19,8 +18,7 @@ public class MovingV2 {
     public MovingV2(EntityV2 parent, float gravityApplied) {
         this.parent = parent;
         this.maxSpeed = 50;
-        this.currentSpeed = 0; 
-        this.velocity = new Vector2(0, 0);
+        this.currentSpeed = 0;
 
         this.angle = 0;             // In radians
         this.angularVelocity = 0;   // Radians per second
@@ -29,18 +27,18 @@ public class MovingV2 {
         this.airFriction = 0.3;
 
         // Almost purely for drawing purosses
-        this.appliedVectors = new ArrayList<>();
-        this.appliedVectors.add(this.velocity);                                                            // Moving Vector
-        this.appliedVectors.add(new Vector2(0*gravityApplied, -1*gravityApplied, Color.PINK, null));      // Gravity Vector
-        this.appliedVectors.add(new Vector2(10, 0, Color.YELLOW, null));                      // Heading vector
-        
-        for (Vector2 elem : appliedVectors) elem.parent = this.parent;
+        this.appliedVectors = new ArrayList<>();                                                                   // Moving Vector
+        this.appliedVectors.add(new Vector2V2((int)(0*gravityApplied), (int)(-1*gravityApplied), null));    // Gravity Vector
+        this.appliedVectors.add(new Vector2V2(10, 0, null));                                         // Heading vector
     }
 
-    public ArrayList<Vector2> getVectors() {
+    public void setChildren() {
+        for (Vector2V2 elem : appliedVectors) elem.parent = this.parent;
+    }
+
+    public ArrayList<Vector2V2> getVectors() {
         return appliedVectors;
     }
-
 
     // Movable contract
     private void friction(float deltaTime) {
@@ -60,21 +58,25 @@ public class MovingV2 {
         double Hypotenuse = this.velocity.magnitude();
         if (Hypotenuse < maxSpeed) return;
 
-        this.velocity.x = (this.velocity.x / Hypotenuse) * maxSpeed;
-        this.velocity.y = (this.velocity.y / Hypotenuse) * maxSpeed;
+        this.velocity.x = (int)((this.velocity.x / Hypotenuse) * maxSpeed);
+        this.velocity.y = (int)((this.velocity.y / Hypotenuse) * maxSpeed);
     }
 
-    private Vector2 constructGravity() {
-        return new Vector2(gravityApplied * gravityNormalized.x, gravityApplied * gravityNormalized.y);
+    private Vector2V2 constructGravity() {
+        return new Vector2V2((int)(gravityApplied * gravityNormalized.x), (int)(gravityApplied * gravityNormalized.y), null);
     }
 
     public void move(float deltaTime) {
-        if (gravityApplied != 0) this.velocity.add(constructGravity(), deltaTime);
+        if (gravityApplied != 0) {
+            Vector2V2 gravity = constructGravity();
+
+            this.velocity.x += gravity.x * deltaTime;
+            this.velocity.y += gravity.y * deltaTime;
+        } 
 
         friction(deltaTime);
         speedCheck();
 
-        angle += angularVelocity * deltaTime;
         this.parent.position.x += (this.velocity.x * deltaTime);
         this.parent.position.y += (this.velocity.y * deltaTime);
     }

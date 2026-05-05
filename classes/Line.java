@@ -6,20 +6,19 @@ import java.awt.Graphics;
 import modules.Canvas;
 
 public class Line implements Drawable {
-    public double x, y;
     public int screenX, screenY;
-    private Color Color;
+    private Color color;
     public float alpha;
-    private float LengthX, LengthY;
+    private double x1, y1, x2, y2;
 
-    public Line (Point2 Position, Vector2 AimedLength, Color Color, Canvas Canvas) {
-        this.x = Position.x;
-        this.y = Position.y;
+    public Line (Point2V2 position1, Point2V2 position2, Color Color, Canvas Canvas) {
+        this.x1 = position1.x;
+        this.y1 = position1.y;
 
-        this.LengthX = (float) AimedLength.x;
-        this.LengthY = (float) AimedLength.y;
+        this.x2 = position2.x;
+        this.y2 = position2.y;
 
-        this.Color = Color;
+        this.color = Color;
         this.alpha = 1f;
 
         if (Canvas != null) Canvas.addDrawable(this);
@@ -33,24 +32,18 @@ public class Line implements Drawable {
     @Override
     public boolean inScreen() {
         return true;
-        //return (screenX);
     }
 
-    @Override
+    //@Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        double x2, y2;
+        int screenX1 = (int)(offsetX+(this.x1*scale));
+        int screenY1 = (int)(offsetY-(this.y1*scale));
 
-        x2 = this.x + this.LengthX;
-        y2 = this.y + this.LengthY;
-    
-        this.screenX = (int)(offsetX + this.x * scale);
-        this.screenY = (int)(offsetY - this.y * scale);
-
-        int width = (int)(offsetX + x2 * scale);
-        int height = (int)(offsetY - y2 * scale);
-
-        g.setColor(new Color(this.Color.getRed(), this.Color.getGreen(), this.Color.getBlue(), (int)(Color.getAlpha()*this.alpha)));
-        g.drawLine(screenX, screenY, width, height);
+        int screenX2 = (int)(offsetX+(this.x2*scale));
+        int screenY2 = (int)(offsetY-(this.y2*scale));
+        
+        g.setColor(color);
+        g.drawLine(screenX1, screenY1, screenX2, screenY2);
     }
     
     /* //Fun zone

@@ -65,7 +65,6 @@ public class Point2 implements Drawable {
 
         if (parent != null && !parent.inScreen()) return;       // Cancels painting object if not in screen  
 
-
         int width = (int)(Radius*2*scale);
         int height = (int)(Radius*2*scale);
 

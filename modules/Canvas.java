@@ -118,7 +118,7 @@ public class Canvas extends JPanel {
         
         for (Drawable obj : this.drawable) try {
             obj.setAlpha(A);
-            obj.draw(g, centerX + this.OffsetX, centerY + this.OffsetY, this.Scale);
+            obj.draw(g, centerX, centerY, this.Scale);
         } catch (Exception e) {}
 
         // UI

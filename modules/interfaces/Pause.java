@@ -1,6 +1,5 @@
 package modules.interfaces;
 
-import classes.Interface.Button;
 import classes.contracts.DrawableInterface;
 import modules.Canvas;
 

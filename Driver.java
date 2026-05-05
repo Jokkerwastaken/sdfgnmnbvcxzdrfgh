@@ -43,15 +43,13 @@ public class Driver implements Runnable {
     public void run() {
         GFrame frame = new GFrame();
         
-        //new Vector2(50, 50, Color.BLACK, frame.canvas);
+        new Vector2V2(50, 50, frame).color = Color.GREEN;
 
-        new Grid(frame);
-
-        //Entity player = new Entity(new Point2(0, 0), new Vector2(0, 0, Color.GREEN, null), 5, Color.BLACK, false, frame);
-        //player.makeControllable();
+        //new Grid(frame);
 
         try {
-            new EntityV2(new Point2(0, 0), 5, Color.BLUE, 0, frame).makeControllable();
+            new EntityV2(new Point2V2(0, 0, frame), 5, Color.BLUE, 0, frame)
+                .makeControllable();
         } catch (Exception e) {
             e.printStackTrace();
         }
