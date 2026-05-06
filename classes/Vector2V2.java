@@ -28,14 +28,14 @@ public class Vector2V2 implements Drawable {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
-    public Vector2 normalize() {
+    public Vector2V2 normalize() {
         double mag = magnitude();
-        if (mag <= 1e-9) return new Vector2(0, 0);
-        return new Vector2(this.x / mag, this.y / mag);
+        if (mag <= 1e-9) return new Vector2V2(0, 0, null);
+        return new Vector2V2(this.x / mag, this.y / mag, null);
     }
     
 
-    public double dotProduct(Vector2 other) {
+    public double dotProduct(Vector2V2 other) {
         return this.x * other.x + this.y * other.y;
     }
 
@@ -48,10 +48,17 @@ public class Vector2V2 implements Drawable {
 
     @Override
     public boolean inScreen() {
-        boolean inX = (this.screenX+(this.x * this.frame.canvas.Scale) >= 0 && this.screenX+(this.x * this.frame.canvas.Scale) <= this.frame.width);
-        boolean inY = (this.screenY+(this.y * this.frame.canvas.Scale) >= 0 && this.screenY-(this.y * this.frame.canvas.Scale) <= this.frame.height);
+        boolean in1 = (this.screenX >= 0 && this.screenX <= this.frame.width) &&
+                        (this.screenY >= 0 && this.screenY <= this.frame.height);
+        boolean inX1 = (this.screenX >= 0 && this.screenX <= this.frame.width);
+        boolean inY1 = (this.screenY >= 0 && this.screenY <= this.frame.height);
 
-        return inX && inY;
+        boolean in2 = (this.screenX-(this.x * this.frame.canvas.Scale) >= 0 && this.screenX-(this.x * this.frame.canvas.Scale) <= this.frame.width) &&
+                        (this.screenY+(this.y * this.frame.canvas.Scale) >= 0 && this.screenY+(this.y * this.frame.canvas.Scale) <= this.frame.height);
+        boolean inX2 = (this.screenX-(this.x * this.frame.canvas.Scale) >= 0 && this.screenX-(this.x * this.frame.canvas.Scale) <= this.frame.width);
+        boolean inY2 = (this.screenY+(this.y * this.frame.canvas.Scale) >= 0 && this.screenY+(this.y * this.frame.canvas.Scale) <= this.frame.height);
+
+        return in1 || in2;
     }
 
     @Override
@@ -63,8 +70,8 @@ public class Vector2V2 implements Drawable {
 
         if (!inScreen()) return;        
 
-        int width = offsetX + (int)(this.x*scale);
-        int height = offsetY - (int)(this.y*scale);
+        int width = offsetX - (int)(this.x*scale);
+        int height = offsetY + (int)(this.y*scale);
 
         g.setColor(this.color);
         g.drawLine((int)screenX, (int)screenY, width, height);

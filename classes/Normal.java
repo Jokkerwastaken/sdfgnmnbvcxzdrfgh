@@ -5,19 +5,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Normal implements Drawable {
-    public final Vector2 Vector;
+    public final Vector2V2 Vector;
 
-    public Normal (Vector2 vector, float scale) {
-        this.Vector = new Vector2(vector.normalize().y *-1, vector.normalize().x);
+    public Normal (Vector2V2 vector, float scale) {
+        this.Vector = new Vector2V2(vector.normalize().y *-1, vector.normalize().x, null);
     }
 
-    public Normal (Vector2 vector, float scale, Color color) {
-        this.Vector = new Vector2(vector.normalize().y *-1, vector.normalize().x);
-        this.Vector.Color = color;
+    public Normal (Vector2V2 vector, float scale, Color color) {
+        this.Vector = new Vector2V2(vector.normalize().y *-1, vector.normalize().x, null);
+        this.Vector.color = color;
     }
 
-    public Vector2 vectorize() {
-        return new Vector2(this.Vector.x, this.Vector.y);
+    public Vector2V2 vectorize() {
+        return new Vector2V2(this.Vector.x, this.Vector.y, null);
     }
 
     @Override

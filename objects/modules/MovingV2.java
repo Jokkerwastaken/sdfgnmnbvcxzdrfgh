@@ -1,5 +1,6 @@
 package objects.modules;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import classes.Vector2V2;
@@ -9,7 +10,7 @@ public class MovingV2 {
     private final EntityV2 parent;
     public final ArrayList<Vector2V2> appliedVectors;
 
-    public Vector2V2 velocity, gravityNormalized;
+    public Vector2V2 velocity, gravity, gravityNormalized;
     public float gravityApplied;
     public double airFriction;
     public double angle, angularVelocity;
@@ -27,9 +28,15 @@ public class MovingV2 {
         this.airFriction = 0.3;
 
         // Almost purely for drawing purosses
-        this.appliedVectors = new ArrayList<>();                                                                   // Moving Vector
-        this.appliedVectors.add(new Vector2V2((int)(0*gravityApplied), (int)(-1*gravityApplied), null));    // Gravity Vector
+        this.appliedVectors = new ArrayList<>();
+    }
+
+    public void finalizeAppliedVectors() {
+        this.appliedVectors.add(new Vector2V2((int)(gravityNormalized.x*gravityApplied), (int)(gravityNormalized.y*gravityApplied), null));    // Gravity Vector
+        this.appliedVectors.get(1).color = Color.PINK;
+
         this.appliedVectors.add(new Vector2V2(10, 0, null));                                         // Heading vector
+        this.appliedVectors.get(2).color = Color.YELLOW;
     }
 
     public void setChildren() {
@@ -62,13 +69,14 @@ public class MovingV2 {
         this.velocity.y = (int)((this.velocity.y / Hypotenuse) * maxSpeed);
     }
 
-    private Vector2V2 constructGravity() {
-        return new Vector2V2((int)(gravityApplied * gravityNormalized.x), (int)(gravityApplied * gravityNormalized.y), null);
+    private void constructGravity() {
+        gravity.x = (int)(gravityApplied * gravityNormalized.x);
+        gravity.y = (int)(gravityApplied * gravityNormalized.y);
     }
 
     public void move(float deltaTime) {
-        if (gravityApplied != 0) {
-            Vector2V2 gravity = constructGravity();
+        if (gravityApplied != 0 && gravity != null) {
+            constructGravity();
 
             this.velocity.x += gravity.x * deltaTime;
             this.velocity.y += gravity.y * deltaTime;

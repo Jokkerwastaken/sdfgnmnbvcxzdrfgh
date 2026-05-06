@@ -20,7 +20,6 @@ public class Driver implements Runnable {
             public void run() {
                 RepaintLoop repaintLoop = new RepaintLoop(frame, FPSLimit);
                 repaintLoop.run();
-                repaintLoop.keepPlayerInFrame();
             }
         };
         this.repaintThread.start();
@@ -45,11 +44,12 @@ public class Driver implements Runnable {
         
         new Vector2V2(50, 50, frame).color = Color.GREEN;
 
-        //new Grid(frame);
+        new Grid(frame);
 
         try {
             new EntityV2(new Point2V2(0, 0, frame), 5, Color.BLUE, 0, frame)
                 .makeControllable();
+            new EntityV2(new Point2V2(0, 0, frame), 5, Color.RED, -9.8f, frame);
         } catch (Exception e) {
             e.printStackTrace();
         }

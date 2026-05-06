@@ -1,20 +1,18 @@
 package objects;
 
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-
 import classes.Point2V2;
 import classes.Vector2V2;
-import objects.modules.MovingV2;
-
 import classes.contracts.Controllable;
-import classes.contracts.Parentable;
 import classes.contracts.Drawable;
 import classes.contracts.Movable;
-
+import classes.contracts.Parentable;
 import modules.GFrame;
 import modules.inputs.InputHandler;
+import objects.modules.MovingV2;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 public class EntityV2 implements Drawable, Movable, Controllable, Parentable {
     private final GFrame frame;
@@ -26,6 +24,8 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable {
 
     public EntityV2(Point2V2 position, int Radius, Color color, float gravityApplied, GFrame frame) {
         this.frame = frame;
+
+        // Ball representing the entity
         this.position = position;
         this.position.color = Color.BLUE;
         this.position.radius = Radius;
@@ -33,10 +33,14 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable {
 
         // Moving
         this.moveHandler = new MovingV2(this, gravityApplied);
-        this.moveHandler.velocity = new Vector2V2(0, 0, frame);
+        this.moveHandler.velocity = new Vector2V2(0, 0, frame);        // Velocity
+        this.moveHandler.velocity.color = Color.GREEN;
+
         this.moveHandler.appliedVectors.add(this.moveHandler.velocity);
-        this.moveHandler.gravityNormalized = new Vector2V2(1, 1, frame);
-        this.moveHandler.maxSpeed = 100;
+        this.moveHandler.gravityNormalized = new Vector2V2(0, -1, frame); // Gravity normal
+
+        this.moveHandler.maxSpeed = 100;            // Extra needed operations
+        this.moveHandler.finalizeAppliedVectors();
         this.moveHandler.setChildren();
 
         // Adding to lists
@@ -48,8 +52,8 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable {
 
     public void makeControllable() throws Exception {
         if (this.frame == null) throw new Exception("Cannot access frame to make this entity controllable!");
-        this.frame.canvas.addControllable(this);
         
+        this.frame.canvas.addControllable(this);
     }
 
 
@@ -68,7 +72,7 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable {
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         position.draw(g, offsetX, offsetY, scale);
         if (debug) for (Vector2V2 elem : moveHandler.getVectors()) {
-            elem.draw(g, offsetX, offsetY, scale);
+            elem.draw(g, (int)(offsetX-(this.position.x*scale)), (int)(offsetY+(this.position.y*scale)), scale);
         }
     }
     

@@ -1,7 +1,6 @@
 package loops;
 
 import modules.GFrame;
-import objects.EntityV2;
 
 public class PhysicsLoop implements Runnable {
     private GFrame frame;
@@ -9,16 +8,6 @@ public class PhysicsLoop implements Runnable {
 
     public PhysicsLoop(GFrame frame) {
         this.frame = frame;
-    }
-
-    private void keepPlayerInFrame() {  // Explodes everything else idk why
-        EntityV2 player = (EntityV2) this.frame.canvas.controllable.get(0);
-        while (true) {
-            if (player.position.screenX >= frame.canvas.centerX * 1.5) frame.canvas.OffsetX -= 2;
-            if (player.position.screenX <= frame.canvas.centerX * 0.5) frame.canvas.OffsetX += 2;
-            if (player.position.screenY >= frame.canvas.centerY * 1.5) frame.canvas.OffsetY -= 2;
-            if (player.position.screenY <= frame.canvas.centerY * 0.5) frame.canvas.OffsetY += 2;
-        }
     }
 
     @Override
@@ -30,7 +19,7 @@ public class PhysicsLoop implements Runnable {
         frame.canvas.phyThread = this;
         
         while (true) {
-            frame.canvas.getInputs(this);
+            frame.canvas.getInput(this);
 
             currentTime = System.nanoTime();
             deltaTime = (currentTime - refLastTime) / 1_000_000_000.0f;
@@ -40,7 +29,6 @@ public class PhysicsLoop implements Runnable {
 
             if (!this.paused) {
                 frame.canvas.moveMovable(deltaTime);
-                //keepPlayerInFrame();
             }
 
             try {

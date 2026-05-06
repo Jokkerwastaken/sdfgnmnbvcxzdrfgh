@@ -8,7 +8,6 @@ import modules.inputs.*;
 import modules.interfaces.*;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
@@ -16,16 +15,16 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     // Canvas stuff
     public int width, height, centerX, centerY;
-    public float Scale = 1f;
+    public float Scale = 2f;
     public int OffsetX, OffsetY;
     public final boolean debug = true;
 
     // Interfaces
-    private final Pause pause;
+    public final Pause pause;
     public FPS fps;
 
     // Input handler;
-    private final InputHandler inputHandler;
+    public final InputHandler inputHandler;
 
     // Threads
     public PhysicsLoop phyThread;
@@ -51,7 +50,7 @@ public class Canvas extends JPanel {
         this.pause = new Pause(this);
         this.fps = new FPS();
 
-        this.inputHandler = new InputHandler();
+        this.inputHandler = new InputHandler(this);
     }
 
 
@@ -59,20 +58,13 @@ public class Canvas extends JPanel {
         this.addKeyListener(this.inputHandler.keyHandler);
         this.addMouseListener(this.inputHandler.mouseHandler);
         this.addMouseMotionListener(this.inputHandler.mouseHandler);
+        this.addMouseWheelListener(this.inputHandler.mouseHandler);
     }
 
-    public void getInputs(PhysicsLoop gameLoop) {
-        if (this.pause.framesFromPause < 20) {
-            this.pause.framesFromPause++;
-            return;
-        }
-        if (this.inputHandler.keyHandler.getKeyState(KeyEvent.VK_ESCAPE)) {
-            this.pause.paused = !this.pause.paused;
-            this.pause.framesFromPause = 0;
-        }
-
-        this.phyThread.paused = this.pause.paused;
+    public void getInput(PhysicsLoop gameLoop) {
+        inputHandler.getInput(gameLoop);
     }
+
 
 
     // Adding to lists
