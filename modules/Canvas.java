@@ -1,8 +1,6 @@
 package modules;
 
-import classes.contracts.Controllable;
-import classes.contracts.Drawable;
-import classes.contracts.Movable;
+import classes.contracts.*;
 import loops.PhysicsLoop;
 import modules.inputs.*;
 import modules.interfaces.*;
@@ -17,7 +15,7 @@ public class Canvas extends JPanel {
     public int width, height, centerX, centerY;
     public float Scale = 2f;
     public int OffsetX, OffsetY;
-    public final boolean debug = true;
+    public boolean debug = true;
 
     // Interfaces
     public final Pause pause;
@@ -33,9 +31,12 @@ public class Canvas extends JPanel {
     public float P_deltaTime;
 
     // Lists
+    public final List<Listable> listables = new CopyOnWriteArrayList<>();
+
     public final List<Controllable> controllable = new CopyOnWriteArrayList<>();
     private final List<Movable> movable = new CopyOnWriteArrayList<>();
     private final List<Drawable> drawable = new CopyOnWriteArrayList<>();
+    private final List<Debugable> debugable = new CopyOnWriteArrayList<>();
 
     public Canvas (int width, int height) {
         this.width = width;
@@ -68,17 +69,15 @@ public class Canvas extends JPanel {
 
 
     // Adding to lists
+    public void addToLists(Listable obje) {
+        if (obje instanceof Drawable objeD) drawable.add(objeD);
+        if (obje instanceof Movable objeM) movable.add(objeM);
+        if (obje instanceof Debugable objeD) debugable.add(objeD);
+    }
+
     public void addControllable(Controllable obj) {
         obj.setInputHandler(this.inputHandler);
         controllable.add(obj);
-    }
-
-    public void addDrawable(Drawable obj) {
-        drawable.add(obj);
-    }
-
-    public void addMovable(Movable obj) {
-        movable.add(obj);
     }
 
 
@@ -93,6 +92,10 @@ public class Canvas extends JPanel {
         this.fps.manageFPS();
     }
 
+    
+    public void debuger() {
+        for (Debugable obj : debugable) obj.deburger(this.debug);
+    }
 
     @Override
     public void paintComponent(Graphics g) {

@@ -3,11 +3,12 @@ package classes;
 import java.awt.Graphics;
 
 import classes.contracts.Drawable;
+import classes.contracts.Listable;
 import classes.contracts.Parentable;
 import java.awt.Color;
 import modules.GFrame;
 
-public class Point2V2 implements Drawable {
+public class Point2V2 implements Drawable, Listable {
     private GFrame frame;
     public Parentable parent;
     public double x, y, screenX, screenY;
@@ -21,7 +22,7 @@ public class Point2V2 implements Drawable {
 
         if (frame == null) return;
         this.frame = frame;
-        frame.canvas.addDrawable(this);
+        frame.canvas.addToLists(this);
     }
 
     @Override
@@ -33,13 +34,13 @@ public class Point2V2 implements Drawable {
     public boolean inScreen() {
         float scaledRadius = this.radius * this.frame.canvas.Scale;
         // Kontrolli, kas ringi servad jäävad raami sisse
-        return (screenX + scaledRadius >= 0 && screenX - scaledRadius <= this.frame.width) &&
-               (screenY + scaledRadius >= 0 && screenY - scaledRadius <= this.frame.height);
+        return (screenX + scaledRadius >= 0 && screenX - scaledRadius <= this.frame.canvas.width) &&
+               (screenY + scaledRadius >= 0 && screenY - scaledRadius <= this.frame.canvas.height);
     }
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        if (this.color == null || this.radius == 0) return;
+        if (this.color == null || this.radius == 0 || this.parent == null || this.frame == null) return;
 
         this.screenX = (double) (offsetX - (this.x*scale) - (this.radius*scale));
         this.screenY = (double) (offsetY + (this.y*scale) - (this.radius*scale));

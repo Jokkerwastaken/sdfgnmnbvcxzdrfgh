@@ -6,6 +6,8 @@ import loops.RepaintLoop;
 import modules.GFrame;
 import objects.EntityV2;
 
+import java.awt.event.KeyEvent;
+
 public class Driver implements Runnable {
     public final long startTime = System.nanoTime();    // Not gonna change
     private Thread repaintThread, phyThread;
@@ -42,14 +44,14 @@ public class Driver implements Runnable {
     public void run() {
         GFrame frame = new GFrame();
         
-        new Vector2V2(50, 50, frame).color = Color.GREEN;
+        //new Vector2V2(50, 50, frame).color = Color.GREEN;
 
         new Grid(frame);
 
         try {
-            new EntityV2(new Point2V2(0, 0, frame), 5, Color.BLUE, 0, frame)
-                .makeControllable();
-            new EntityV2(new Point2V2(0, 0, frame), 5, Color.RED, -9.8f, frame);
+            EntityV2 player = new EntityV2(new Point2V2(0, 0, frame), 5, Color.BLUE, -9, frame);
+            player.makeControllable(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D);
+            //new EntityV2(new Point2V2(0, 0, frame), 5, Color.RED, -9.8f, frame);
         } catch (Exception e) {
             e.printStackTrace();
         }

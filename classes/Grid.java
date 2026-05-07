@@ -1,11 +1,12 @@
 package classes;
 
 import classes.contracts.Drawable;
+import classes.contracts.Listable;
 import modules.GFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Grid implements Drawable {
+public class Grid implements Drawable, Listable {
     private final GFrame frame;
     private final int spacing = 50; // Distance between lines
     private float alpha = 1.0f;
@@ -14,7 +15,7 @@ public class Grid implements Drawable {
         this.frame = frame;
         // We add the grid itself as a single drawable object
         if (frame != null && frame.canvas != null) {
-            frame.canvas.addDrawable(this);
+            frame.canvas.addToLists(this);
         }
     }
 

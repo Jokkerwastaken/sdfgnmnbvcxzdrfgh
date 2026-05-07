@@ -9,11 +9,15 @@ import java.awt.Color;
 public class FPS implements DrawableInterface {
     public FPSManager fpsManager;
 
+    public boolean enabled;
+
     public FPS() {
         this.fpsManager = new FPSManager();
 
         this.fpsManager.MaxFPS = 0;
         this.fpsManager.MinFPS = Integer.MAX_VALUE;
+
+        this.enabled = false;
     }
 
     private void drawFPS(Graphics g) {
@@ -40,6 +44,6 @@ public class FPS implements DrawableInterface {
     @Override
     public void draw(Graphics g) {
         // UI
-        drawFPS(g);
+        if (enabled) drawFPS(g);
     }
 }

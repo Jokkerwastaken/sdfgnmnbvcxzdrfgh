@@ -16,10 +16,10 @@ public class GFrame extends JFrame {
         setPreferredSize(new Dimension(width, height));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.BLACK);
 
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
-
 
         canvas = new Canvas(width, height);
         canvas.addInputHandlers(keyHandler, mouseHandler);
@@ -30,10 +30,10 @@ public class GFrame extends JFrame {
         setVisible(true);
         requestFocus(true);
 
-        getNewWD(canvas);
+        getNewWH(canvas);
     }
 
-    private void getNewWD(Canvas canvas) {
+    private void getNewWH(Canvas canvas) {
         Timer WD = new Timer(200, e -> {
             canvas.width = this.getWidth();
             canvas.height = this.getHeight();

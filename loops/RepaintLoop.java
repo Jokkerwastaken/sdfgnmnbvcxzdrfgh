@@ -30,11 +30,9 @@ public class RepaintLoop implements Runnable {
     private void keepPlayerInFrame() {
         if (this.Frame.canvas.controllable.isEmpty()) return;
         EntityV2 player = (EntityV2) this.Frame.canvas.controllable.get(0);
-        
 
         double px = player.position.screenX;
         double py = player.position.screenY;
-    
 
         double leftBound = Frame.canvas.width * 0.3;
         double rightBound = Frame.canvas.width * 0.7;
@@ -69,6 +67,7 @@ public class RepaintLoop implements Runnable {
             fps(deltaTime);
 
             keepPlayerInFrame();
+            Frame.canvas.debuger();
             Frame.canvas.repaint();
             // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out
             // Frame.canvas.OffsetY -= 1;       // Example use of screen offset which in this case is redused 
