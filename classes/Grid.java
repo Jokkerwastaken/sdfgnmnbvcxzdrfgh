@@ -25,8 +25,7 @@ public class Grid implements Drawable, Listable {
     }
 
     @Override
-    public boolean inScreen() {
-        // The grid is global, so it's effectively always "in screen"
+    public boolean inScreen(int offsetX, int offsetY, float scale) {
         return true;
     }
 
@@ -39,23 +38,17 @@ public class Grid implements Drawable, Listable {
 
         float scaledSpacing = spacing * scale;
         
-        // Calculate the boundaries of the frame
         int width = frame.canvas.getWidth();
         int height = frame.canvas.getHeight();
 
-        // 1. Draw Vertical Lines
-        // We start from the offset and move left/right until we hit screen edges
         for (float x = offsetX % scaledSpacing; x < width; x += scaledSpacing) {
             g.drawLine((int)x, 0, (int)x, height);
         }
 
-        // 2. Draw Horizontal Lines
-        // We start from the offset and move up/down until we hit screen edges
         for (float y = offsetY % scaledSpacing; y < height; y += scaledSpacing) {
             g.drawLine(0, (int)y, width, (int)y);
         }
         
-        // 3. Optional: Draw Axis (Center Lines) in a darker color
         g.setColor(new Color(100, 100, 100, (int)(255 * alpha)));
         g.drawLine(offsetX, 0, offsetX, height); // Y-axis
         g.drawLine(0, offsetY, width, offsetY);   // X-axis

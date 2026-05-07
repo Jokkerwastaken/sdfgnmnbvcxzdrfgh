@@ -12,7 +12,7 @@ public class Vector2V2 implements Drawable, Listable {
     private GFrame frame;
     public Parentable parent;
 
-    public double x, y, screenX, screenY;
+    public double x, y;
     public Color color;
     private float alpha, lastAlpha;
 
@@ -48,36 +48,33 @@ public class Vector2V2 implements Drawable, Listable {
     }
 
     @Override
-    public boolean inScreen() {
-        boolean in1 = (this.screenX >= 0 && this.screenX <= this.frame.canvas.width) &&
-                        (this.screenY >= 0 && this.screenY <= this.frame.canvas.height);
+    public boolean inScreen(int offsetX, int offsetY, float scale) {
+        if (frame == null) return true;
 
-        boolean in2 = (this.screenX-(this.x * this.frame.canvas.Scale) >= 0 && this.screenX-(this.x * this.frame.canvas.Scale) <= this.frame.canvas.width) &&
-                        (this.screenY+(this.y * this.frame.canvas.Scale) >= 0 && this.screenY+(this.y * this.frame.canvas.Scale) <= this.frame.canvas.height);
+        boolean in1 = (offsetX >= 0 && offsetX <= this.frame.canvas.width) &&
+                        (offsetY >= 0 && offsetY <= this.frame.canvas.height);
+
+        boolean in2 = (offsetX-(this.x * scale) >= 0 && offsetX-(this.x * scale) <= this.frame.canvas.width) &&
+                        (offsetY+(this.y * scale) >= 0 && offsetY+(this.y * scale) <= this.frame.canvas.height);
 
         return in1 || in2;
     }
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        if (this.color == null || this.parent == null || this.frame == null) return;
+        if (this.color == null || this.parent == null) return;
 
         if (lastAlpha != alpha) {
             lastAlpha = alpha;
             this.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.alpha);
-
-            System.out.println(lastAlpha);
         }
 
-        this.screenX = offsetX; // Beginning points
-        this.screenY = offsetY;
-
-        if (!inScreen()) return;        
+        if (!inScreen(offsetX, offsetY, scale)) return;        
 
         int width = offsetX - (int)(this.x*scale);
         int height = offsetY + (int)(this.y*scale);
 
         g.setColor(this.color);
-        g.drawLine((int)this.screenX, (int)this.screenY, width, height);
+        g.drawLine((int)offsetX, (int)offsetY, width, height);
     }
 }

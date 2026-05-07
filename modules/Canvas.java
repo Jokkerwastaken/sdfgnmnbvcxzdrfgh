@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel {
     // Canvas stuff
     public int width, height, centerX, centerY;
-    public float Scale = 2f;
+    public float Scale = 1f;
     public int OffsetX, OffsetY;
-    public boolean debug = true;
+    public boolean debug = false;
 
     // Interfaces
     public final Pause pause;
@@ -31,8 +31,6 @@ public class Canvas extends JPanel {
     public float P_deltaTime;
 
     // Lists
-    public final List<Listable> listables = new CopyOnWriteArrayList<>();
-
     public final List<Controllable> controllable = new CopyOnWriteArrayList<>();
     private final List<Movable> movable = new CopyOnWriteArrayList<>();
     private final List<Drawable> drawable = new CopyOnWriteArrayList<>();

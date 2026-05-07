@@ -31,8 +31,8 @@ public class Point2V2 implements Drawable, Listable {
     }
 
     @Override
-    public boolean inScreen() {
-        float scaledRadius = this.radius * this.frame.canvas.Scale;
+    public boolean inScreen(int offsetX, int offsetY, float scale) {
+        float scaledRadius = this.radius * scale;
         // Kontrolli, kas ringi servad jäävad raami sisse
         return (screenX + scaledRadius >= 0 && screenX - scaledRadius <= this.frame.canvas.width) &&
                (screenY + scaledRadius >= 0 && screenY - scaledRadius <= this.frame.canvas.height);
@@ -47,7 +47,7 @@ public class Point2V2 implements Drawable, Listable {
 
         float size = (2*this.radius*scale);
 
-        if (!inScreen()) return;
+        if (!inScreen(offsetX, offsetY, scale)) return;
 
         g.setColor(new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), (int)(color.getAlpha()*this.alpha)));
         g.fillOval((int)screenX, (int)screenY, (int)size, (int)size);

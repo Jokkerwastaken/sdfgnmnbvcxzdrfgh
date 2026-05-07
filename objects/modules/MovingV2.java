@@ -32,10 +32,13 @@ public class MovingV2 {
     }
 
     public void finalizeAppliedVectors() {
-        this.appliedVectors.add(new Vector2V2((int)(gravityNormalized.x*gravityApplied), (int)(gravityNormalized.y*gravityApplied), null));    // Gravity Vector
+        // Gravity Vector
+        this.appliedVectors.add(new Vector2V2((int)(gravityNormalized.x*gravityApplied), 
+                                              (int)(gravityNormalized.y*gravityApplied), null));
         this.appliedVectors.get(1).color = Color.PINK;
-
-        this.appliedVectors.add(new Vector2V2(10, 0, null));                                         // Heading vector
+    
+        // Heading vector
+        this.appliedVectors.add(new Vector2V2(10, 0, null));
         this.appliedVectors.get(2).color = Color.YELLOW;
     }
 
@@ -65,13 +68,13 @@ public class MovingV2 {
         double Hypotenuse = this.velocity.magnitude();
         if (Hypotenuse < maxSpeed) return;
 
-        this.velocity.x = (int)((this.velocity.x / Hypotenuse) * maxSpeed);
-        this.velocity.y = (int)((this.velocity.y / Hypotenuse) * maxSpeed);
+        this.velocity.x = (this.velocity.x / Hypotenuse) * maxSpeed;
+        this.velocity.y = (this.velocity.y / Hypotenuse) * maxSpeed;
     }
 
     private void constructGravity() {
-        gravity.x = (int)(gravityApplied * gravityNormalized.x);
-        gravity.y = (int)(gravityApplied * gravityNormalized.y);
+        gravity.x = gravityApplied * gravityNormalized.x;
+        gravity.y = gravityApplied * gravityNormalized.y;
     }
 
     public void move(float deltaTime) {

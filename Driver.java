@@ -13,7 +13,7 @@ public class Driver implements Runnable {
     private Thread repaintThread, phyThread;
 
     //fps
-    private final float FPSLimit = 1000;
+    private final float FPSLimit = 60;
 
     private PhysicsLoop gameLoop;
 

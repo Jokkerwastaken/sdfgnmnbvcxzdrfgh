@@ -31,7 +31,7 @@ public class Normal implements Drawable {
     }
 
     @Override
-    public boolean inScreen() {
+    public boolean inScreen(int offsetX, int offsetY, float scale) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'inScreen'");
     }
