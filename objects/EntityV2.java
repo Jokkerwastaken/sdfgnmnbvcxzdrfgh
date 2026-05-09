@@ -8,6 +8,7 @@ import classes.contracts.Drawable;
 import classes.contracts.Listable;
 import classes.contracts.Movable;
 import classes.contracts.Parentable;
+import classes.geometry.Circle;
 import modules.GFrame;
 import modules.inputs.InputHandler;
 import objects.modules.MovingV2;
@@ -20,28 +21,31 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
     public final MovingV2 moveHandler;
     private int keyForward, keyLeft, keyDown, keyRight;
     public final Point2V2 position;
+    public final Circle projection;
     public InputHandler inputHandler;
 
     private boolean debug;
 
-    public EntityV2(Point2V2 position, int Radius, Color color, float gravityApplied, GFrame frame) {
+    public EntityV2(Point2V2 position, int radius, Color color, float gravityApplied, GFrame frame) {
         this.frame = frame;
+        this.position = position;
 
         // Ball representing the entity
-        this.position = position;
-        this.position.color = Color.BLUE;
-        this.position.radius = Radius;
-        this.position.parent = this;
+        this.projection = new Circle((int)position.x, (int)position.y, null);
+        this.projection.color = color;
+        this.projection.radius = radius;
+        this.projection.parent = this;
 
         // Moving
         this.moveHandler = new MovingV2(this, gravityApplied);
-        this.moveHandler.velocity = new Vector2V2(0, 0, null);        // Velocity
+            // Velocity
+        this.moveHandler.velocity = new Vector2V2(0, 0, null);        
         this.moveHandler.velocity.color = Color.GREEN;
-
+            // Gravity normal
         this.moveHandler.appliedVectors.add(this.moveHandler.velocity);
-        this.moveHandler.gravityNormalized = new Vector2V2(0, -1, null); // Gravity normal
-
-        this.moveHandler.maxSpeed = 100;            // Extra needed operations
+        this.moveHandler.gravityNormalized = new Vector2V2(0, -1, null); 
+            // Extra needed operations
+        this.moveHandler.maxSpeed = 100;            
         this.moveHandler.finalizeAppliedVectors();
         this.moveHandler.setChildren();
 
@@ -66,20 +70,25 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
     // Drawable contract
     @Override
     public void setAlpha(float alpha) {
-        this.position.setAlpha(alpha);
+        this.projection.setAlpha(alpha);
     }
 
     @Override
     public boolean inScreen(int offsetX, int offsetY, float scale) {
-        return this.position.inScreen(offsetX, offsetY, scale);
+        return this.projection.inScreen(offsetX, offsetY, scale);
     }
 
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
-        position.draw(g, offsetX, offsetY, scale);
-        if (this.debug && inScreen(offsetX, offsetY, scale)) for (Vector2V2 elem : this.moveHandler.getVectors()) {
-            elem.draw(g, (int)(offsetX-(this.position.x*scale)), (int)(offsetY+(this.position.y*scale)), scale);
-        }
+        projection.draw(g, offsetX, offsetY, scale);
+
+        if (this.debug && inScreen(offsetX, offsetY, scale)) 
+            for (Vector2V2 elem : this.moveHandler.getVectors()) {
+                int OffsetX = (int)(offsetX+(this.position.x*scale) - (this.projection.radius*scale));
+                int OffsetY = (int)(offsetY+(this.position.y*scale) - (this.projection.radius*scale));
+
+                elem.draw(g, OffsetX, OffsetY, scale);
+            }
     }
     
 
@@ -92,9 +101,9 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
 
     private void input() {
         if (inputHandler.keyHandler.getKeyState(this.keyForward)) this.moveHandler.velocity.y -= 1;
-        if (inputHandler.keyHandler.getKeyState(this.keyLeft)) this.moveHandler.velocity.x += 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyLeft)) this.moveHandler.velocity.x -= 1;
         if (inputHandler.keyHandler.getKeyState(this.keyDown)) this.moveHandler.velocity.y += 1;
-        if (inputHandler.keyHandler.getKeyState(this.keyRight)) this.moveHandler.velocity.x -= 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyRight)) this.moveHandler.velocity.x += 1;
     }
 
 

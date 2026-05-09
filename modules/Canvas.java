@@ -19,7 +19,7 @@ public class Canvas extends JPanel {
 
     // Interfaces
     public final Pause pause;
-    public FPS fps;
+    public FPSManager fps;
 
     // Input handler;
     public final InputHandler inputHandler;
@@ -47,7 +47,7 @@ public class Canvas extends JPanel {
         this.OffsetY = 0;
 
         this.pause = new Pause(this);
-        this.fps = new FPS();
+        this.fps = new FPSManager();
 
         this.inputHandler = new InputHandler(this);
     }
@@ -78,8 +78,6 @@ public class Canvas extends JPanel {
         controllable.add(obj);
     }
 
-
-
     public void moveMovable(float deltaTime) {
         for (Movable obj : movable) obj.move(deltaTime);
     }
@@ -87,7 +85,7 @@ public class Canvas extends JPanel {
 
 
     public void fpsManager() {
-        this.fps.manageFPS();
+        this.fps.manage();
     }
 
     

@@ -1,4 +1,6 @@
 import classes.*;
+import classes.geometry.Circle;
+
 import java.awt.Color;
 import javax.swing.Timer;
 import loops.PhysicsLoop;
@@ -43,20 +45,21 @@ public class Driver implements Runnable {
     @Override
     public void run() {
         GFrame frame = new GFrame();
-        
-        //new Vector2V2(50, 50, frame).color = Color.GREEN;
-
         new Grid(frame);
 
+        Circle c = new Circle(0, 0, frame);
+        c.color = Color.BLACK;
+        c.radius = 100;
+
         try {
-            EntityV2 player = new EntityV2(new Point2V2(0, 0, frame), 5, Color.BLUE, -9, frame);
+            EntityV2 player = new EntityV2(new Point2V2(0, 0), 5, Color.BLUE, 9, frame);
             player.makeControllable(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D);
             //new EntityV2(new Point2V2(0, 0, frame), 5, Color.RED, -9.8f, frame);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        frame.canvas.fps.fpsManager.FPSLimit = this.FPSLimit;
+        frame.canvas.fps.FPSLimit = this.FPSLimit;
 
         ThreadAndTimerInits(frame);
 

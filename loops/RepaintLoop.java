@@ -21,7 +21,7 @@ public class RepaintLoop implements Runnable {
     }
 
     private void fps(float deltaTime) {
-        FPSManager fps = Frame.canvas.fps.fpsManager;
+        FPSManager fps = Frame.canvas.fps;
         
         fps.F_deltaTime = deltaTime;
         if (fps.F_samples < fps.LastFewFPS.length) fps.F_samples++;
@@ -29,10 +29,11 @@ public class RepaintLoop implements Runnable {
 
     private void keepPlayerInFrame() {
         if (this.Frame.canvas.controllable.isEmpty()) return;
+
         EntityV2 player = (EntityV2) this.Frame.canvas.controllable.get(0);
 
-        double px = player.position.screenX;
-        double py = player.position.screenY;
+        double px = player.projection.X;
+        double py = player.projection.Y;
 
         double leftBound = Frame.canvas.width * 0.3;
         double rightBound = Frame.canvas.width * 0.7;

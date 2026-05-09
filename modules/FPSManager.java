@@ -1,16 +1,28 @@
 package modules;
 
-public class FPSManager {
+import classes.contracts.DrawableInterface;
+
+import java.awt.Graphics;
+import java.awt.Color;
+
+public class FPSManager implements DrawableInterface {
     public float F_samples, F_deltaTime, FPSLimit;
     public final int[] LastFewFPS = new int[100];
     public int Count, MinFPS, MaxFPS, AverageFPS;
     public long LastMinFPS, LastMaxFPS;
+    public boolean enabled;
+
+    public Color color;
 
     public FPSManager() {
         this.F_samples = 0;
         this.Count = 0;
         this.LastMinFPS = 0;
         this.LastMaxFPS = 0;
+        this.MaxFPS = 0;
+        this.MinFPS = Integer.MAX_VALUE;
+
+        this.enabled = false;
     }
 
     private void checkForMax(long currentTime) {
@@ -51,5 +63,29 @@ public class FPSManager {
         long currentTime = System.nanoTime();
         checkForMax(currentTime);
         checkForMin(currentTime);
+    }
+
+
+    // Drawing
+    private void drawFPS(Graphics g) {
+        if (this.F_deltaTime == 0) return;
+
+        this.LastFewFPS[this.Count % this.LastFewFPS.length] = (int)(1.0 / this.F_deltaTime);
+        this.Count = (this.Count + 1) % this.LastFewFPS.length;
+
+        if (this.F_deltaTime > 0 && color != null) {
+            g.setColor(this.color);
+            g.setFont(g.getFont().deriveFont(12f));
+            
+            g.drawString("Max FPS: " + this.MaxFPS, 30, 30);
+            g.drawString("Avg FPS: " + this.AverageFPS, 30, 50);
+            g.drawString("Min FPS: " + (this.MinFPS == Integer.MAX_VALUE ? 0 : this.MinFPS), 30, 70);
+        }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        // UI
+        if (enabled) drawFPS(g);
     }
 }

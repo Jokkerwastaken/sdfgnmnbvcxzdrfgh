@@ -23,9 +23,9 @@ public class InputHandler {
 
     public void getInput(PhysicsLoop gameLoop) {
         getPause();
+        switchDebugging();
         if (!gameLoop.paused) {
             getZooming();
-            getDebugging();
         }
     }
 
@@ -44,14 +44,15 @@ public class InputHandler {
 
     private void getZooming() {
         int wheelState = this.mouseHandler.getMouseWheelState();
+        float scale = this.canvas.Scale;
         this.mouseHandler.mouseWheelState = 0;        
         if (wheelState == 0) return;
 
-        if (wheelState < 0 && this.canvas.Scale < 10.0) this.canvas.Scale += 0.2;  //Zoom in
-        if (wheelState > 0 && this.canvas.Scale > 0.2) this.canvas.Scale -= 0.2;  //Zoom out
+        if (wheelState < 0 && scale < 10.0) this.canvas.Scale = (float)(scale+0.2);  //Zoom in
+        if (wheelState > 0 && scale > 0.2) this.canvas.Scale = (float)(scale-0.2);  //Zoom out
     }
 
-    private void getDebugging() {
+    private void switchDebugging() {
         if (this.framesFromDebug < 20) {
             this.framesFromDebug++;
             return;

@@ -13,7 +13,6 @@ public class Grid implements Drawable, Listable {
 
     public Grid(GFrame frame) {
         this.frame = frame;
-        // We add the grid itself as a single drawable object
         if (frame != null && frame.canvas != null) {
             frame.canvas.addToLists(this);
         }

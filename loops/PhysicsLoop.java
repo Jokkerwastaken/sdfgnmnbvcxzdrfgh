@@ -1,5 +1,7 @@
 package loops;
 
+import java.awt.Color;
+
 import modules.GFrame;
 
 public class PhysicsLoop implements Runnable {
@@ -26,6 +28,7 @@ public class PhysicsLoop implements Runnable {
             refLastTime = currentTime;
 
             frame.canvas.P_deltaTime = deltaTime;
+            frame.canvas.fps.color = this.paused ? Color.WHITE : Color.BLACK;
 
             if (!this.paused) {
                 frame.canvas.moveMovable(deltaTime);

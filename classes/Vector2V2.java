@@ -71,7 +71,7 @@ public class Vector2V2 implements Drawable, Listable {
 
         if (!inScreen(offsetX, offsetY, scale)) return;        
 
-        int width = offsetX - (int)(this.x*scale);
+        int width = offsetX + (int)(this.x*scale);
         int height = offsetY + (int)(this.y*scale);
 
         g.setColor(this.color);
