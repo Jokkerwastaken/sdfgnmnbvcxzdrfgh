@@ -1,7 +1,7 @@
 package loops;
 
 import modules.FPSManager;
-import modules.GFrame;
+import modules.window.GFrame;
 import objects.EntityV2;
 
 public class RepaintLoop implements Runnable {
@@ -67,9 +67,9 @@ public class RepaintLoop implements Runnable {
 
             fps(deltaTime);
 
-            keepPlayerInFrame();
+            //keepPlayerInFrame();
             Frame.canvas.debuger();
-            Frame.canvas.repaint();
+            Frame.canvas.render();
             // Frame.canvas.Scale -= 0.001f;    // Example use of scale which in this case slowly zooms out
             // Frame.canvas.OffsetY -= 1;       // Example use of screen offset which in this case is redused 
                                                 // and as a result the picture moves downward

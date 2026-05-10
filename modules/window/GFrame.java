@@ -1,4 +1,4 @@
-package modules;
+package modules.window;
 
 import java.awt.*;
 import javax.swing.JFrame;
@@ -10,7 +10,7 @@ public class GFrame extends JFrame {
     public int width = 600;
     public int height = 600;
 
-    public Canvas canvas;
+    public CanvasV2 canvas;
 
     public GFrame() {
         setPreferredSize(new Dimension(width, height));
@@ -21,7 +21,7 @@ public class GFrame extends JFrame {
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
 
-        canvas = new Canvas(width, height);
+        canvas = new CanvasV2(width, height);
         canvas.addInputHandlers(keyHandler, mouseHandler);
         
         add(canvas, BorderLayout.CENTER);
@@ -33,7 +33,7 @@ public class GFrame extends JFrame {
         getNewWH(canvas);
     }
 
-    private void getNewWH(Canvas canvas) {
+    private void getNewWH(CanvasV2 canvas) {
         Timer WD = new Timer(200, e -> {
             canvas.width = this.getWidth();
             canvas.height = this.getHeight();

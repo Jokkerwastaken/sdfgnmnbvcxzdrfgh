@@ -1,11 +1,13 @@
 import classes.*;
 import classes.geometry.Circle;
+import classes.geometry.Line;
 
 import java.awt.Color;
+
 import javax.swing.Timer;
 import loops.PhysicsLoop;
 import loops.RepaintLoop;
-import modules.GFrame;
+import modules.window.GFrame;
 import objects.EntityV2;
 
 import java.awt.event.KeyEvent;
@@ -51,16 +53,17 @@ public class Driver implements Runnable {
         c.color = Color.BLACK;
         c.radius = 100;
 
+        Line l = new Line(new Point2V2(0, 0), new Point2V2(10, 10), frame);
+        l.color = Color.yellow;
+
         try {
-            EntityV2 player = new EntityV2(new Point2V2(0, 0), 5, Color.BLUE, 9, frame);
+            EntityV2 player = new EntityV2(new Point2V2(0, 0), 5, Color.BLUE, -9, frame);
             player.makeControllable(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D);
-            //new EntityV2(new Point2V2(0, 0, frame), 5, Color.RED, -9.8f, frame);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         frame.canvas.fps.FPSLimit = this.FPSLimit;
-
         ThreadAndTimerInits(frame);
 
         frame.canvas.requestFocus(true);

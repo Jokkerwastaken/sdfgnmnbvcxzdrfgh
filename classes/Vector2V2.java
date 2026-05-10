@@ -1,12 +1,12 @@
 package classes;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 import classes.contracts.Drawable;
 import classes.contracts.Listable;
 import classes.contracts.Parentable;
-import modules.GFrame;
+import modules.window.GFrame;
+
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class Vector2V2 implements Drawable, Listable {
     private GFrame frame;
@@ -34,9 +34,8 @@ public class Vector2V2 implements Drawable, Listable {
         if (mag <= 1e-9) return new Vector2V2(0, 0, null);
         return new Vector2V2(this.x / mag, this.y / mag, null);
     }
-    
 
-    public double dotProduct(Vector2V2 other) {
+    public double dotProduct(Vector2V2 other) { // skalaarkorrutis
         return this.x * other.x + this.y * other.y;
     }
 
@@ -51,15 +50,15 @@ public class Vector2V2 implements Drawable, Listable {
     public boolean inScreen(int offsetX, int offsetY, float scale) {
         if (frame == null) return true;
 
-        boolean in1 = (offsetX >= 0 && offsetX <= this.frame.canvas.width) &&
+        boolean in1 =   (offsetX >= 0 && offsetX <= this.frame.canvas.width) &&
                         (offsetY >= 0 && offsetY <= this.frame.canvas.height);
 
-        boolean in2 = (offsetX-(this.x * scale) >= 0 && offsetX-(this.x * scale) <= this.frame.canvas.width) &&
+        boolean in2 =   (offsetX-(this.x * scale) >= 0 && offsetX-(this.x * scale) <= this.frame.canvas.width) &&
                         (offsetY+(this.y * scale) >= 0 && offsetY+(this.y * scale) <= this.frame.canvas.height);
 
         return in1 || in2;
     }
-
+    
     @Override
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         if (this.color == null || this.parent == null) return;
@@ -69,12 +68,7 @@ public class Vector2V2 implements Drawable, Listable {
             this.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.alpha);
         }
 
-        if (!inScreen(offsetX, offsetY, scale)) return;        
-
-        int width = offsetX + (int)(this.x*scale);
-        int height = offsetY + (int)(this.y*scale);
-
         g.setColor(this.color);
-        g.drawLine((int)offsetX, (int)offsetY, width, height);
+        g.drawLine((int)offsetX, (int)offsetY, (int)(offsetX+this.x), (int)(offsetY+this.y));
     }
 }

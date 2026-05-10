@@ -2,17 +2,17 @@ package modules.inputs;
 
 import java.awt.event.KeyEvent;
 import loops.PhysicsLoop;
-import modules.Canvas;
+import modules.window.CanvasV2;
 
 public class InputHandler {
-    private final Canvas canvas;
+    private final CanvasV2 canvas;
 
     private int framesFromDebug;
 
     public KeyHandler keyHandler;
     public MouseHandler mouseHandler;
 
-    public InputHandler(Canvas canvas) {
+    public InputHandler(CanvasV2 canvas) {
         this.canvas = canvas;
         this.framesFromDebug = 0;
 
@@ -24,9 +24,8 @@ public class InputHandler {
     public void getInput(PhysicsLoop gameLoop) {
         getPause();
         switchDebugging();
-        if (!gameLoop.paused) {
+        if (!gameLoop.paused) 
             getZooming();
-        }
     }
 
     private void getPause() {
@@ -57,6 +56,7 @@ public class InputHandler {
             this.framesFromDebug++;
             return;
         }
+        
         if (keyHandler.getKeyState(KeyEvent.VK_F3)) {
             this.framesFromDebug = 0;
 

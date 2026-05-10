@@ -1,18 +1,18 @@
 package modules.interfaces;
 
 import classes.contracts.DrawableInterface;
-import modules.Canvas;
+import modules.window.CanvasV2;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 public class Pause implements DrawableInterface {
-    private final Canvas canvas;
+    private final CanvasV2 canvas;
     private int width, height;
     public boolean paused;
     public int framesFromPause;
 
-    public Pause(Canvas canvas) {
+    public Pause(CanvasV2 canvas) {
         this.canvas = canvas;
 
         this.paused = false;

@@ -9,8 +9,8 @@ import classes.contracts.Listable;
 import classes.contracts.Movable;
 import classes.contracts.Parentable;
 import classes.geometry.Circle;
-import modules.GFrame;
 import modules.inputs.InputHandler;
+import modules.window.GFrame;
 import objects.modules.MovingV2;
 
 import java.awt.Color;
@@ -49,6 +49,8 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
         this.moveHandler.finalizeAppliedVectors();
         this.moveHandler.setChildren();
 
+        for (Vector2V2 elem : this.moveHandler.appliedVectors) elem.parent = this; 
+
         // Adding to lists
         this.frame.canvas.addToLists(this);
 
@@ -82,13 +84,16 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
     public void draw(Graphics g, int offsetX, int offsetY, float scale) {
         projection.draw(g, offsetX, offsetY, scale);
 
-        if (this.debug && inScreen(offsetX, offsetY, scale)) 
-            for (Vector2V2 elem : this.moveHandler.getVectors()) {
-                int OffsetX = (int)(offsetX+(this.position.x*scale) - (this.projection.radius*scale));
-                int OffsetY = (int)(offsetY+(this.position.y*scale) - (this.projection.radius*scale));
+        if (!this.debug) return;
 
-                elem.draw(g, OffsetX, OffsetY, scale);
-            }
+        for (Vector2V2 elem : this.moveHandler.getVectors()) {
+            if (!elem.inScreen(offsetX, offsetY, scale)) return;
+
+            int OffsetX = (int)(offsetX+(this.position.x*scale));
+            int OffsetY = (int)(offsetY+(this.position.y*scale));
+
+            elem.draw(g, OffsetX, OffsetY, scale);
+        }
     }
     
 

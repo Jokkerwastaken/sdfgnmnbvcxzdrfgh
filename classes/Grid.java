@@ -2,7 +2,8 @@ package classes;
 
 import classes.contracts.Drawable;
 import classes.contracts.Listable;
-import modules.GFrame;
+import modules.window.GFrame;
+
 import java.awt.Color;
 import java.awt.Graphics;
 

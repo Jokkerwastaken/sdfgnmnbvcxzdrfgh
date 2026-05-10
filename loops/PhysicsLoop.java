@@ -2,7 +2,7 @@ package loops;
 
 import java.awt.Color;
 
-import modules.GFrame;
+import modules.window.GFrame;
 
 public class PhysicsLoop implements Runnable {
     private GFrame frame;
