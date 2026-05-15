@@ -54,7 +54,7 @@ public class Driver implements Runnable {
         c.radius = 100;
 
         Line l = new Line(new Point2V2(0, 0), new Point2V2(10, 10), frame);
-        l.color = Color.yellow;
+        l.color = Color.YELLOW;
 
         try {
             EntityV2 player = new EntityV2(new Point2V2(0, 0), 5, Color.BLUE, -9, frame);

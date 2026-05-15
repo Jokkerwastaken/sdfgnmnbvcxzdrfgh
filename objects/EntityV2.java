@@ -9,6 +9,8 @@ import classes.contracts.Listable;
 import classes.contracts.Movable;
 import classes.contracts.Parentable;
 import classes.geometry.Circle;
+import classes.geometry.Line;
+import classes.geometry.Vector;
 import modules.inputs.InputHandler;
 import modules.window.GFrame;
 import objects.modules.MovingV2;
@@ -39,17 +41,17 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
         // Moving
         this.moveHandler = new MovingV2(this, gravityApplied);
             // Velocity
-        this.moveHandler.velocity = new Vector2V2(0, 0, null);        
+        this.moveHandler.velocity = new Vector(0, 0);        
         this.moveHandler.velocity.color = Color.GREEN;
+        this.moveHandler.vectors.add(this.moveHandler.velocity);
             // Gravity normal
-        this.moveHandler.appliedVectors.add(this.moveHandler.velocity);
-        this.moveHandler.gravityNormalized = new Vector2V2(0, -1, null); 
+        this.moveHandler.gravityNormalized = new Vector(0, -1); 
             // Extra needed operations
         this.moveHandler.maxSpeed = 100;            
         this.moveHandler.finalizeAppliedVectors();
         this.moveHandler.setChildren();
 
-        for (Vector2V2 elem : this.moveHandler.appliedVectors) elem.parent = this; 
+        for (Vector elem : this.moveHandler.vectors) elem.parent = this; 
 
         // Adding to lists
         this.frame.canvas.addToLists(this);
@@ -86,7 +88,7 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
 
         if (!this.debug) return;
 
-        for (Vector2V2 elem : this.moveHandler.getVectors()) {
+        for (Vector elem : this.moveHandler.getVectors()) {
             if (!elem.inScreen(offsetX, offsetY, scale)) return;
 
             int OffsetX = (int)(offsetX+(this.position.x*scale));
@@ -105,10 +107,10 @@ public class EntityV2 implements Drawable, Movable, Controllable, Parentable, De
     }
 
     private void input() {
-        if (inputHandler.keyHandler.getKeyState(this.keyForward)) this.moveHandler.velocity.y -= 1;
-        if (inputHandler.keyHandler.getKeyState(this.keyLeft)) this.moveHandler.velocity.x -= 1;
-        if (inputHandler.keyHandler.getKeyState(this.keyDown)) this.moveHandler.velocity.y += 1;
-        if (inputHandler.keyHandler.getKeyState(this.keyRight)) this.moveHandler.velocity.x += 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyForward)) this.moveHandler.velocity.vector.y -= 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyLeft)) this.moveHandler.velocity.vector.x -= 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyDown)) this.moveHandler.velocity.vector.y += 1;
+        if (inputHandler.keyHandler.getKeyState(this.keyRight)) this.moveHandler.velocity.vector.x += 1;
     }
 
 

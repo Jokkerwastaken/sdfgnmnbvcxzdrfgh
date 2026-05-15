@@ -34,9 +34,12 @@ public class GFrame extends JFrame {
     }
 
     private void getNewWH(CanvasV2 canvas) {
-        Timer WD = new Timer(200, e -> {
-            canvas.width = this.getWidth();
-            canvas.height = this.getHeight();
+        Timer WD = new Timer(500, e -> {
+            int width = this.getWidth();
+            int height = this.getHeight();
+
+            if (canvas.width != width) canvas.width = height;
+            if (canvas.height != height)canvas.height = height;
         });
         WD.start();
     }

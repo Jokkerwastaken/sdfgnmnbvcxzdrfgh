@@ -1,0 +1,69 @@
+package classes.geometry;
+
+import java.awt.Graphics;
+import java.awt.Color;
+
+import classes.Vector2V2;
+import classes.contracts.Drawable;
+import classes.contracts.Listable;
+import classes.contracts.Parentable;
+import modules.window.GFrame;
+
+public class Vector implements Drawable, Listable {
+    private GFrame frame;
+    public Parentable parent;
+
+    public Vector2V2 vector;
+    public Color color;
+    private float lastAlpha, alpha;
+
+    public Vector(Vector2V2 vector) {
+        this.vector = vector;
+
+        if (frame == null) return;
+        this.frame = frame;
+        frame.canvas.addToLists(this);
+    }
+    public Vector(double x, double y) {
+        this.vector = new Vector2V2(x, y, null);
+
+        if (frame == null) return;
+        this.frame = frame;
+        frame.canvas.addToLists(this);
+    }
+
+
+    // Drawable contract
+    @Override
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
+
+    @Override
+    public boolean inScreen(int offsetX, int offsetY, float scale) {
+        if (frame == null) return true;
+
+        boolean in1 =   (offsetX >= 0 && offsetX <= this.frame.canvas.width) &&
+                        (offsetY >= 0 && offsetY <= this.frame.canvas.height);
+
+        boolean in2 =   (offsetX-(this.vector.x * scale) >= 0 && offsetX-(this.vector.x * scale) <= this.frame.canvas.width) &&
+                        (offsetY+(this.vector.y * scale) >= 0 && offsetY+(this.vector.y * scale) <= this.frame.canvas.height);
+
+        return in1 || in2;
+    }
+
+    @Override
+    public void draw(Graphics g, int offsetX, int offsetY, float scale) {
+        if (this.color == null) return;
+
+        if (this.color == null || this.parent == null) return;
+
+        if (lastAlpha != alpha) {
+            lastAlpha = alpha;
+            this.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.alpha);
+        }
+
+        g.setColor(this.color);
+        g.drawLine((int)offsetX, (int)offsetY, (int)(offsetX+this.vector.x), (int)(offsetY+this.vector.y));
+    }
+}

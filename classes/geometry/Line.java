@@ -1,12 +1,12 @@
 package classes.geometry;
 
 import classes.Point2V2;
+import classes.Vector2V2;
 import classes.contracts.Drawable;
 import classes.contracts.Listable;
-import modules.window.GFrame;
-
 import java.awt.Color;
 import java.awt.Graphics;
+import modules.window.GFrame;
 
 public class Line implements Drawable, Listable {
     private GFrame frame;
@@ -39,7 +39,11 @@ public class Line implements Drawable, Listable {
 
         if (lastAlpha != alpha) {
             lastAlpha = alpha;
-            this.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.alpha);
+
+            this.color = new Color( this.color.getRed() != 0 ? 255/this.color.getRed() : 0,
+                                    this.color.getGreen() != 0 ? 255/this.color.getGreen() : 0,
+                                    this.color.getBlue() != 0 ? 255/this.color.getBlue() : 0,
+                                    this.alpha);
         }
         g.setColor(this.color);
 
